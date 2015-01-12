@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">uGuide</string>
+    <string name="action_settings">Settings</string>
+    <string name="camera">Take a picture</string>
+    <string name="album">Select from album</string>
+    <string name="cancel">Cancel</string>
+    <string name="bt_start">Searching...</string>
+    <string name="return_btn">Return</string>
+    <string name="title_activity_splash">Splash</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_result">ResultActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="cancel_button_description">Cancel</string>
+    <string name="done_button_description">Done</string>
+    <string name="retake_button_description">Retake</string>
+    <string name="intro_singapore">Singapore, officially the Republic of Singapore, is a sovereign city-state and island country in Southeast Asia. It lies off the southern tip of the Malay Peninsula and is 137 kilometres (85 mi) north of the equator. The country\'s territory consists of the lozenge-shaped main island, commonly referred to as Singapore Island in English and Pulau Ujong in Malay, and more than 60 significantly smaller islets. Singapore is separated from Peninsular Malaysia by the Straits of Johor to the north, and from Indonesia\'s Riau Islands by the Singapore Strait to the south. The country is highly urbanised, and little of the original vegetation remains. The country\'s territory has consistently expanded through land reclamation.</string>
+    <string name="title_activity_street_view">StreetViewActivity</string>
+
+</resources>
