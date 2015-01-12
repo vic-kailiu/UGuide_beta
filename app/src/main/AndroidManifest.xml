@@ -63,6 +63,7 @@
             android:name=".StreetViewActivity"
             android:label="@string/title_activity_street_view"
             android:theme="@style/TransparentActionNav" />
+
     </application>
 
 </manifest>

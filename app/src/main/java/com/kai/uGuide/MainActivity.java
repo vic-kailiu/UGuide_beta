@@ -7,15 +7,24 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -32,6 +41,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.edmodo.cropper.CropImageView;
 import com.enrique.stackblur.StackBlurManager;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
@@ -46,6 +56,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kai.uGuide.ui.fragment.ScrollMapFragment;
+import com.kai.uGuide.ui.fragment.SuperAwesomeCardFragment;
 import com.kai.uGuide.utils.PicShrink;
 import com.nineoldandroids.view.ViewHelper;
 import com.qq.wx.img.imgsearcher.ImgListener;
@@ -65,6 +76,15 @@ import butterknife.Optional;
 
 
 public class MainActivity extends ActionBarActivity implements ObservableScrollViewCallbacks, ImgListener {
+
+    public enum Stage {
+        MAIN,
+        PROCESS,
+        CROP,
+        SEARCH,
+        RESULT
+    }
+
     //Scroll
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private static final boolean TOOLBAR_IS_STICKY = false;
@@ -83,6 +103,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
     @Optional @InjectView(R.id.profile)                 FloatingActionButton    profileButton;
     @Optional @InjectView(R.id.camera)                  FloatingActionButton    cameraButton;
     @Optional @InjectView(R.id.gallery)                 FloatingActionButton    galleryButton;
+
     // Google Map
     ScrollMapFragment mapFragment;
 
@@ -99,6 +120,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
 
     //Process Page
     @Optional @InjectView(R.id.process_logo)    ImageView img;
+
     Context context;
     DisplayMetrics displayMetrics;
     private Stage currentStage;
@@ -121,6 +143,15 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
     private String mResUrl;
     private String mResMD5;
     private String mResPicDesc;
+
+    private final Handler handler = new Handler();
+
+    private PagerSlidingTabStrip tabs;
+    private ViewPager pager;
+    private MyPagerAdapter adapter;
+
+    private Drawable oldBackground = null;
+    private int currentColor = 0xFF666666;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,7 +182,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
 
         try {
             // Loading map
-            initilizeMap();
+            initializeMap();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -268,35 +299,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) {//result is not correct
-            return;
-        } else {
-            if (FROM_ALBUM == requestCode) {
-                uri = data.getData();
-                if (null == uri) {
-                    return;
-                }
-            }
-            resultMode = requestCode;
-
-            initProcessUI();
-        }
-    }
-
     //region MainUI
-
-    private void preInitImg() {
-        ImgSearcher.shareInstance().setListener(this);
-        mInitSucc = ImgSearcher.shareInstance().init(this, screKey);
-
-        if (mInitSucc != 0) {
-            Toast.makeText(this, "Failed to initialize",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
 
     private void initializeScrollView() {
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
@@ -363,7 +366,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
 //        ViewHelper.setScaleY(mFab, 0);
     }
 
-    private void initilizeMap() {
+    private void initializeMap() {
         mapFragment = ScrollMapFragment.newInstance();
         mapFragment.setListener(
                 new ScrollMapFragment.OnMapReadyListener() {
@@ -414,14 +417,53 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         introView = (RelativeLayout) findViewById(R.id.textView);
         introParams = (LinearLayout.LayoutParams) introView.getLayoutParams();
 
-//        initViewPager(4, 0xFFFFFFFF, 0xFF000000);
-//        mFixedTabs = (FixedTabsView) findViewById(R.id.fixed_icon_tabs);
-//        mFixedTabsAdapter = new FixedIconTabsAdapter(this);
-//        mFixedTabs.setAdapter(mFixedTabsAdapter);
-//        mFixedTabs.setViewPager(mPager);
-
         text_overlay = findViewById(R.id.text_overlay);
         text_overlay_params = (RelativeLayout.LayoutParams) text_overlay.getLayoutParams();
+
+        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        pager = (ViewPager) findViewById(R.id.pager);
+        adapter = new MyPagerAdapter(getSupportFragmentManager());
+        pager.setAdapter(adapter);
+
+        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                .getDisplayMetrics());
+        pager.setPageMargin(pageMargin);
+
+        tabs.setViewPager(pager);
+
+        changeColor(currentColor);
+    }
+
+    private void changeColor(int newColor) {
+
+        tabs.setIndicatorColor(newColor);
+        currentColor = newColor;
+
+    }
+
+    public class MyPagerAdapter extends FragmentPagerAdapter {
+
+        private final String[] TITLES = { "Categories", "Home", "Top Paid", "Top Free", "Top Grossing", "Top New Paid",
+                "Top New Free", "Trending" };
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return TITLES[position];
+        }
+
+        @Override
+        public int getCount() {
+            return TITLES.length;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return SuperAwesomeCardFragment.newInstance(position);
+        }
     }
 
     @Override
@@ -502,8 +544,26 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         text_overlay.setLayoutParams(text_overlay_params);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {//result is not correct
+            return;
+        } else {
+            if (FROM_ALBUM == requestCode) {
+                uri = data.getData();
+                if (null == uri) {
+                    return;
+                }
+            }
+            resultMode = requestCode;
+
+            initProcessUI();
+        }
+    }
+
     private void startCamera() {
-        String filepath = null;
+        String filePath;
         boolean sdCardExist = Environment.getExternalStorageState()
                 .equals(android.os.Environment.MEDIA_MOUNTED); //Judge SD card is present
         if (!sdCardExist) {
@@ -512,13 +572,13 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
              */
             @SuppressWarnings("deprecation")
             File mediaFilesDir = getDir("mediaFiles", Context.MODE_WORLD_READABLE);
-            filepath = mediaFilesDir.getPath();
+            filePath = mediaFilesDir.getPath();
         } else {
-            filepath = Environment.getExternalStorageDirectory().getPath()
+            filePath = Environment.getExternalStorageDirectory().getPath()
                     + "/UGuide/mm";
-            File outputpath = new File(filepath);
-            if (!outputpath.exists()) {
-                outputpath.mkdirs();
+            File outputPath = new File(filePath);
+            if (!outputPath.exists()) {
+                outputPath.mkdirs();
             }
         }
 
@@ -527,7 +587,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         String dateStr = dateFormat.format(date);
         String imgType = ".jpg";
-        imgFileName = filepath + "/" + dateStr + imgType;
+        imgFileName = filePath + "/" + dateStr + imgType;
         File imgFile = new File(imgFileName);
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -570,7 +630,47 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
 
     }
 
+    //endregion
+
+    //region ProcessUI
+
+    private void generateBackground() {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        int x = 0;
+        int y = 0;
+        double screenRatio = 1.0 * displayMetrics.widthPixels / displayMetrics.heightPixels;
+        double imgRatio = 1.0 * bm.getWidth() / bm.getHeight();
+        if (imgRatio > screenRatio) {
+            width = (int) (height * screenRatio);
+            x = (int) ((bm.getWidth() - width) / 2);
+        } else if (imgRatio < screenRatio) {
+            height = (int) (width / screenRatio);
+            y = (int) ((bm.getHeight() - height) / 2);
+        }
+        Bitmap fitImg = Bitmap.createBitmap(bm, x, y, width, height);
+
+        StackBlurManager _stackBlurManager = new StackBlurManager(fitImg);
+        bmBlurred = _stackBlurManager.process(20);
+    }
+
+    private void resetBackground() {
+        getWindow().setBackgroundDrawable(getDrawable(R.drawable.bg));
+    }
+
+    //endregion
+
     //region SearchUI
+    private void preInitImg() {
+        ImgSearcher.shareInstance().setListener(this);
+        mInitSucc = ImgSearcher.shareInstance().init(this, screKey);
+
+        if (mInitSucc != 0) {
+            Toast.makeText(this, "Failed to initialize",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private int startImgSearching(byte[] img) {
         if (mInitSucc != 0) {
             mInitSucc = ImgSearcher.shareInstance().init(this, screKey);
@@ -586,12 +686,9 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
             return 0;
         } else {
             Toast.makeText(this, "ErrorCode = " + ret, Toast.LENGTH_LONG).show();
-            ;
             return -1;
         }
     }
-
-    //endregion
 
     @Override
     public void onGetError(int errorCode) {
@@ -625,20 +722,6 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         turnToResultActivity(ret);
     }
 
-    public void turnToResultActivity(boolean isFound) {
-        currentStage = Stage.RESULT;
-
-        Intent it = new Intent(this, ResultActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("ret", isFound);
-        bundle.putString("url", mResUrl);
-        bundle.putString("md5", mResMD5);
-        bundle.putString("picDesc", mResPicDesc);
-        it.putExtras(bundle);
-        startActivity(it);
-        //finish();
-    }
-
     @Override
     public void onGetState(ImgSearcherState state) {
         if (ImgSearcherState.Canceling == state) {
@@ -660,29 +743,21 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         return outs.toByteArray();
     }
 
-    private void generateBackground() {
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        int x = 0;
-        int y = 0;
-        double screenRatio = 1.0 * displayMetrics.widthPixels / displayMetrics.heightPixels;
-        double imgRatio = 1.0 * bm.getWidth() / bm.getHeight();
-        if (imgRatio > screenRatio) {
-            width = (int) (height * screenRatio);
-            x = (int) ((bm.getWidth() - width) / 2);
-        } else if (imgRatio < screenRatio) {
-            height = (int) (width / screenRatio);
-            y = (int) ((bm.getHeight() - height) / 2);
-        }
-        Bitmap fitImg = Bitmap.createBitmap(bm, x, y, width, height);
+    public void turnToResultActivity(boolean isFound) {
+        currentStage = Stage.RESULT;
 
-        StackBlurManager _stackBlurManager = new StackBlurManager(fitImg);
-        bmBlurred = _stackBlurManager.process(20);
+        Intent it = new Intent(this, ResultActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("ret", isFound);
+        bundle.putString("url", mResUrl);
+        bundle.putString("md5", mResMD5);
+        bundle.putString("picDesc", mResPicDesc);
+        it.putExtras(bundle);
+        startActivity(it);
+        //finish();
     }
 
     //endregion
-
-    //region ProcessUI
 
     @Override
     public void onResume() {
@@ -691,10 +766,8 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         if (currentStage == Stage.RESULT)
             initMainUI();
         else if (currentStage == Stage.MAIN)
-            initilizeMap();
+            initializeMap();
     }
-
-    //endregion
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -742,15 +815,4 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         }
     }
 
-    private void resetBackground() {
-        getWindow().setBackgroundDrawable(getDrawable(R.drawable.bg));
-    }
-
-    public enum Stage {
-        MAIN,
-        PROCESS,
-        CROP,
-        SEARCH,
-        RESULT
-    }
 }
