@@ -19,7 +19,8 @@ limitations under the License.
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="150dp">
+    android:layout_height="150dp"
+    >
 
     <ImageView
         android:id="@+id/meat_image"
@@ -43,8 +44,8 @@ limitations under the License.
         android:shadowDy="0"
         android:shadowRadius="10"
         android:textColor="#ffffff"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        tools:text="Hello"/>
+        android:textSize="20sp"
+        tools:text="Hello"
+        android:textIsSelectable="false"/>
 
 </RelativeLayout>

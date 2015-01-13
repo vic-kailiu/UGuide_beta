@@ -32,7 +32,11 @@ import android.widget.GridView;
 import android.widget.ListView;
 
 import com.kai.uGuide.R;
+import com.kai.uGuide.ui.adapter.Home;
+import com.kai.uGuide.ui.adapter.ListItem;
 import com.kai.uGuide.ui.adapter.MeatAdapter;
+
+import java.util.List;
 
 /**
  * Main screen for AdapterTransition sample.
@@ -44,6 +48,8 @@ public class AdapterTransitionFragment extends Fragment implements Transition.Tr
      * with IDs, we use this ID to mark the root view.
      */
     private static final int ROOT_ID = 1;
+
+    private static final String ARG_POSITION = "position";
 
     /**
      * A tag for saving state whether the mAbsListView is ListView or GridView.
@@ -71,8 +77,14 @@ public class AdapterTransitionFragment extends Fragment implements Transition.Tr
      */
     private MeatAdapter mAdapter;
 
-    public static AdapterTransitionFragment newInstance() {
-        return new AdapterTransitionFragment();
+    private ListItem[] data;
+
+    public static AdapterTransitionFragment newInstance(int position) {
+        AdapterTransitionFragment fragment = new AdapterTransitionFragment();
+        Bundle b = new Bundle();
+        b.putInt(ARG_POSITION, position);
+        fragment.setArguments(b);
+        return fragment;
     }
 
     public AdapterTransitionFragment() {
@@ -81,7 +93,16 @@ public class AdapterTransitionFragment extends Fragment implements Transition.Tr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+
+        data = getData(getArguments().getInt(ARG_POSITION));
+    }
+
+    private ListItem[] getData(int position) {
+        switch (position)
+        {
+            case 0: return Home.Attractions;
+        }
+        return Home.Attractions;
     }
 
     @Override
@@ -153,11 +174,11 @@ public class AdapterTransitionFragment extends Fragment implements Transition.Tr
         if (inflateListView) {
             mAbsListView = (AbsListView) inflater.inflate(R.layout.fragment_meat_list,
                     container, false);
-            mAdapter = new MeatAdapter(inflater, R.layout.item_meat_list);
+            mAdapter = new MeatAdapter(data, inflater, R.layout.item_meat_list);
         } else {
             mAbsListView = (AbsListView) inflater.inflate(R.layout.fragment_meat_grid,
                     container, false);
-            mAdapter = new MeatAdapter(inflater, R.layout.item_meat_grid);
+            mAdapter = new MeatAdapter(data, inflater, R.layout.item_meat_grid);
         }
         mAbsListView.setAdapter(mAdapter);
         mAbsListView.setOnItemClickListener(mAdapter);

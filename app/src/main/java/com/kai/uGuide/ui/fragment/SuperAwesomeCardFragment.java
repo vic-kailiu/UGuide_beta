@@ -36,7 +36,7 @@ public class SuperAwesomeCardFragment extends Fragment {
 
     private int position;
 
-    private AdapterTransitionFragment adapter = new AdapterTransitionFragment();
+    private AdapterTransitionFragment adapter;
 
     public SuperAwesomeCardFragment() {
     }
@@ -64,24 +64,24 @@ public class SuperAwesomeCardFragment extends Fragment {
         FrameLayout fl = new FrameLayout(getActivity());
         fl.setLayoutParams(params);
 
-        final int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources()
-                .getDisplayMetrics());
-
-        TextView v = new TextView(getActivity());
-        params.setMargins(margin, margin, margin, margin);
-        v.setLayoutParams(params);
-        v.setLayoutParams(params);
-        v.setGravity(Gravity.CENTER);
-        v.setBackgroundResource(R.drawable.background_card);
-        v.setText("CARD " + (position + 1));
-
-        fl.addView(v);
+//        final int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources()
+//                .getDisplayMetrics());
+//
+//        TextView v = new TextView(getActivity());
+//        params.setMargins(margin, margin, margin, margin);
+//        v.setLayoutParams(params);
+//        v.setLayoutParams(params);
+//        v.setGravity(Gravity.CENTER);
+//        v.setBackgroundResource(R.drawable.background_card);
+//        v.setText("CARD " + (position + 1));
+//
+//        fl.addView(v);
 
         LinearLayout pagerlayout = new LinearLayout(getActivity());
         pagerlayout.setOrientation(LinearLayout.HORIZONTAL);
         pagerlayout.setId(300 + position);
 
-        adapter = new AdapterTransitionFragment();
+        adapter = AdapterTransitionFragment.newInstance(position);
 
         getFragmentManager().beginTransaction()
                 .add(pagerlayout.getId(), adapter, "someTag" + position)

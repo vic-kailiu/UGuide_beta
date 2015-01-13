@@ -218,8 +218,6 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         }
 
         initializeViews();
-
-        onScrollChanged(0, false, false);
     }
 
     private void initProcessUI() {
@@ -354,6 +352,10 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
                 } else {
                     mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
+
+//                mScrollView.scrollTo(0, 1);
+//                mScrollView.scrollTo(0, 0);
+
 //                onScrollChanged(0, false, false);
             }
         });
@@ -375,6 +377,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
             @Override
             public void onClick(View v) {
                 mFab.collapse();
+                //onScrollChanged(-100, false, false);
             }
         });
         cameraButton.setOnClickListener(new View.OnClickListener() {

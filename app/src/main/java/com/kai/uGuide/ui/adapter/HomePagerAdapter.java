@@ -39,6 +39,6 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
 //        }
 //
         return items[position];
-          //return SuperAwesomeCardFragment.newInstance(position);
+        //return SuperAwesomeCardFragment.newInstance(position);
     }
 }

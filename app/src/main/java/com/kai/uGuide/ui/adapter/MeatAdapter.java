@@ -37,6 +37,7 @@ public class MeatAdapter extends BaseAdapter implements AbsListView.OnItemClickL
 
     private final LayoutInflater mLayoutInflater;
     private final int mResourceId;
+    private final ListItem[] data;
 
     /**
      * Create a new instance of {@link MeatAdapter}.
@@ -45,24 +46,25 @@ public class MeatAdapter extends BaseAdapter implements AbsListView.OnItemClickL
      * @param resourceId The resource ID for the layout to be used. The layout should contain an
      *                   ImageView with ID of "meat_image" and a TextView with ID of "meat_title".
      */
-    public MeatAdapter(LayoutInflater inflater, int resourceId) {
+    public MeatAdapter(ListItem[] data, LayoutInflater inflater, int resourceId) {
+        this.data = data;
         mLayoutInflater = inflater;
         mResourceId = resourceId;
     }
 
     @Override
     public int getCount() {
-        return Meat.MEATS.length;
+        return data.length;
     }
 
     @Override
-    public Meat getItem(int position) {
-        return Meat.MEATS[position];
+    public ListItem getItem(int position) {
+        return data[position];
     }
 
     @Override
     public long getItemId(int position) {
-        return Meat.MEATS[position].resourceId;
+        return data[position].resourceId;
     }
 
     @Override
@@ -80,9 +82,12 @@ public class MeatAdapter extends BaseAdapter implements AbsListView.OnItemClickL
             view = convertView;
             holder = (ViewHolder) view.getTag();
         }
-        Meat meat = getItem(position);
-        holder.image.setImageResource(meat.resourceId);
-        holder.title.setText(meat.title);
+        ListItem item = getItem(position);
+        if (mResourceId == R.layout.item_meat_list)
+            holder.image.setImageResource(item.thumbId);
+        else
+            holder.image.setImageResource(item.resourceId);
+        holder.title.setText(item.title);
         return view;
     }
 
