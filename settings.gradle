@@ -1,1 +1,1 @@
-include ':app', ':libraries:StackBlur', ':libraries:observablescrollview', ':libraries:viewpagerextensions'
+include ':app', ':libraries:StackBlur', ':libraries:observablescrollview'

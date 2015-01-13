@@ -1,19 +1,17 @@
 package com.kai.uGuide;
 
+import android.graphics.Point;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.util.DisplayMetrics;
+import android.widget.TextView;
+
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
-
-import android.graphics.Point;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.DisplayMetrics;
-import android.view.View;
-import android.widget.TextView;
-
 import com.google.android.gms.maps.model.StreetViewPanoramaOrientation;
 import com.nineoldandroids.view.ViewHelper;
 
@@ -22,8 +20,8 @@ import com.nineoldandroids.view.ViewHelper;
  */
 public class StreetViewActivity extends FragmentActivity
         implements StreetViewPanorama.OnStreetViewPanoramaChangeListener,
-                   StreetViewPanorama.OnStreetViewPanoramaCameraChangeListener,
-                   StreetViewPanorama.OnStreetViewPanoramaClickListener {
+        StreetViewPanorama.OnStreetViewPanoramaCameraChangeListener,
+        StreetViewPanorama.OnStreetViewPanoramaClickListener {
 
     private static final LatLng MERLION = new LatLng(1.2865534, 103.8544511);
 
@@ -43,7 +41,7 @@ public class StreetViewActivity extends FragmentActivity
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        screenWidth =(int) (1.0 * displaymetrics.widthPixels / displaymetrics.density);
+        screenWidth = (int) (1.0 * displaymetrics.widthPixels / displaymetrics.density);
         screenHeight = (int) (1.0 * displaymetrics.heightPixels / displaymetrics.density);
 
         SupportStreetViewPanoramaFragment streetViewPanoramaFragment = (SupportStreetViewPanoramaFragment) getSupportFragmentManager().findFragmentById(R.id.streetviewpanorama);

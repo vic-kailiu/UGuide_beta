@@ -19,8 +19,7 @@ public class ScrollMapFragment extends SupportMapFragment {
     }
 
     public static ScrollMapFragment newInstance() {
-        ScrollMapFragment fragment = new ScrollMapFragment();
-        return fragment;
+        return new ScrollMapFragment();
     }
 
     @Override

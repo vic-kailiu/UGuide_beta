@@ -49,8 +49,8 @@ public class PicShrink {
         }
     }
 
-    public static int computeSampleSize(BitmapFactory.Options options,
-                                        int minSideLength, int maxNumOfPixels) {
+    private static int computeSampleSize(BitmapFactory.Options options,
+                                         int minSideLength, int maxNumOfPixels) {
         int initialSize = computeInitialSampleSize(options, minSideLength, maxNumOfPixels);
         Log.d(TAG, "initialSize = " + initialSize);
 

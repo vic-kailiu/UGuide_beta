@@ -36,6 +36,11 @@ public class SuperAwesomeCardFragment extends Fragment {
 
     private int position;
 
+    private AdapterTransitionFragment adapter = new AdapterTransitionFragment();
+
+    public SuperAwesomeCardFragment() {
+    }
+
     public static SuperAwesomeCardFragment newInstance(int position) {
         SuperAwesomeCardFragment f = new SuperAwesomeCardFragment();
         Bundle b = new Bundle();
@@ -72,13 +77,21 @@ public class SuperAwesomeCardFragment extends Fragment {
 
         fl.addView(v);
 
-        LinearLayout ll = new LinearLayout(getActivity());
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        ll.setId(12345);
-        getFragmentManager().beginTransaction().add(ll.getId(), new AdapterTransitionFragment(), "someTag1").commit();
-        fl.addView(ll);
+        LinearLayout pagerlayout = new LinearLayout(getActivity());
+        pagerlayout.setOrientation(LinearLayout.HORIZONTAL);
+        pagerlayout.setId(300 + position);
+
+        adapter = new AdapterTransitionFragment();
+
+        getFragmentManager().beginTransaction()
+                .add(pagerlayout.getId(), adapter, "someTag" + position)
+                .commit();
+        fl.addView(pagerlayout);
 
         return fl;
     }
 
+    public AdapterTransitionFragment getAdapter() {
+        return adapter;
+    }
 }

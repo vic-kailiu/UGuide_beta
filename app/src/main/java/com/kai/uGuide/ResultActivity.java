@@ -25,7 +25,7 @@ public class ResultActivity extends ActionBarActivity {
 
         view.setText(mResPicDesc);
 
-        Button button = (Button)findViewById(R.id.button);
+        Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(
                 new View.OnClickListener() {
                     @Override

@@ -26,8 +26,8 @@ limitations under the License.
 
     <ImageView
         android:id="@+id/meat_image"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:scaleType="centerCrop"
         tools:src="@drawable/p1"/>
 
@@ -40,7 +40,7 @@ limitations under the License.
         android:layout_toEndOf="@id/meat_image"
         android:layout_centerInParent="true"
         android:gravity="center_vertical"
-        android:textSize="24sp"
+        android:textSize="20sp"
         tools:text="Title"/>
 
 </RelativeLayout>

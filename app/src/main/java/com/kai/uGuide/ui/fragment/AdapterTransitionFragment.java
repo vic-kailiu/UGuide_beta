@@ -24,9 +24,6 @@ import android.transition.Scene;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -99,6 +96,7 @@ public class AdapterTransitionFragment extends Fragment implements Transition.Tr
             isListView = savedInstanceState.getBoolean(STATE_IS_LISTVIEW, true);
         }
         inflateAbsList(inflater, container, isListView);
+
         return inflater.inflate(R.layout.fragment_adapter_transition, container, false);
     }
 
@@ -145,9 +143,9 @@ public class AdapterTransitionFragment extends Fragment implements Transition.Tr
     /**
      * Inflate a ListView or a GridView with a corresponding ListAdapter.
      *
-     * @param inflater The LayoutInflater.
-     * @param container The ViewGroup that contains this AbsListView. The AbsListView won't be
-     *                  attached to it.
+     * @param inflater        The LayoutInflater.
+     * @param container       The ViewGroup that contains this AbsListView. The AbsListView won't be
+     *                        attached to it.
      * @param inflateListView Pass true to inflate a ListView, or false to inflate a GridView.
      */
     private void inflateAbsList(LayoutInflater inflater, ViewGroup container,
@@ -168,7 +166,7 @@ public class AdapterTransitionFragment extends Fragment implements Transition.Tr
     /**
      * Toggle the UI between ListView and GridView.
      */
-    private void toggle() {
+    public void toggle() {
         // We use mCover as the overlay on which we carry out the transition.
         mCover.setVisibility(View.VISIBLE);
         // This FrameLayout holds all the visible views in the current list or grid. We use this as

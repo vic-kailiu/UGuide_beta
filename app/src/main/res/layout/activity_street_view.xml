@@ -3,11 +3,6 @@
     android:layout_height="match_parent"
     tools:context="com.kai.uGuide.StreetViewActivity">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/relative_layout">
-
         <fragment
             android:id="@+id/streetviewpanorama"
             android:layout_width="fill_parent"
@@ -20,9 +15,8 @@
             android:text="Merlion"
             android:id="@+id/textView2"
             android:textIsSelectable="false"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:background="@drawable/street_view_overlay"
             android:gravity="center"
             android:padding="30dp"/>
-    </RelativeLayout>
 </RelativeLayout>

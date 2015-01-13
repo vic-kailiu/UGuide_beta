@@ -6,7 +6,7 @@
     <string name="camera">Take a picture</string>
     <string name="album">Select from album</string>
     <string name="cancel">Cancel</string>
-    <string name="bt_start">Searching...</string>
+    <string name="bt_start">Searching…</string>
     <string name="return_btn">Return</string>
     <string name="title_activity_splash">Splash</string>
     <string name="title_activity_main">MainActivity</string>

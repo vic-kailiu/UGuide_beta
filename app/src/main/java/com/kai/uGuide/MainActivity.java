@@ -7,23 +7,15 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
@@ -55,8 +47,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.kai.uGuide.ui.adapter.HomePagerAdapter;
 import com.kai.uGuide.ui.fragment.ScrollMapFragment;
-import com.kai.uGuide.ui.fragment.SuperAwesomeCardFragment;
 import com.kai.uGuide.utils.PicShrink;
 import com.nineoldandroids.view.ViewHelper;
 import com.qq.wx.img.imgsearcher.ImgListener;
@@ -89,40 +81,83 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private static final boolean TOOLBAR_IS_STICKY = false;
     private static final String screKey = "f31db0b2967e23e2f15d8a2948f860ed3791fce38dec856a";
-    final int TAKE_PICTURE = 1;
-    final int FROM_ALBUM = 2;
+    private final int TAKE_PICTURE = 1;
+    private final int FROM_ALBUM = 2;
     private final int MAP_ZOOM = 16;
     //Main Variables
-    @Optional @InjectView(R.id.scroll)                  ObservableScrollView    mScrollView;
-    @Optional @InjectView(R.id.toolbar)                 View                    mToolbar;
-    @Optional @InjectView(R.id.image)                   View                    mImageView;
-    @Optional @InjectView(R.id.overlay)                 View                    mOverlayView;
-    @Optional @InjectView(R.id.title)                   TextView                mTitleView;
-    @Optional @InjectView(R.id.fab)                     FloatingActionsMenu     mFab;
-    @Optional @InjectView(R.id.fab_expand_menu_button)  AddFloatingActionButton mAddButton;
-    @Optional @InjectView(R.id.profile)                 FloatingActionButton    profileButton;
-    @Optional @InjectView(R.id.camera)                  FloatingActionButton    cameraButton;
-    @Optional @InjectView(R.id.gallery)                 FloatingActionButton    galleryButton;
+    @Optional
+    @InjectView(R.id.scroll)
+    ObservableScrollView mScrollView;
+    @Optional
+    @InjectView(R.id.toolbar)
+    View mToolbar;
+    @Optional
+    @InjectView(R.id.image)
+    View mImageView;
+    @Optional
+    @InjectView(R.id.overlay)
+    View mOverlayView;
+    @Optional
+    @InjectView(R.id.title)
+    TextView mTitleView;
+    @Optional
+    @InjectView(R.id.fab)
+    FloatingActionsMenu mFab;
+    @Optional
+    @InjectView(R.id.fab_expand_menu_button)
+    AddFloatingActionButton mAddButton;
+    @Optional
+    @InjectView(R.id.profile)
+    FloatingActionButton profileButton;
+    @Optional
+    @InjectView(R.id.camera)
+    FloatingActionButton cameraButton;
+    @Optional
+    @InjectView(R.id.gallery)
+    FloatingActionButton galleryButton;
+    @Optional
+    @InjectView(R.id.tabs)
+    PagerSlidingTabStrip tabs;
+    @Optional
+    @InjectView(R.id.pager)
+    ViewPager pager;
+    @Optional
+    @InjectView(R.id.viewSwitch)
+    ImageButton viewSwitchBtn;
 
     // Google Map
-    ScrollMapFragment mapFragment;
+    private ScrollMapFragment mapFragment;
 
     //Result Page
-    @Optional @InjectView(R.id.cancel)              Button mCancelBtn;
-    @Optional @InjectView(R.id.start_searching)     TextView mTextView;
+    @Optional
+    @InjectView(R.id.cancel)
+    Button mCancelBtn;
+    @Optional
+    @InjectView(R.id.start_searching)
+    TextView mTextView;
     int mInitSucc = 0;
 
     //Crop Page
-    @Optional @InjectView(R.id.CropImageView)       CropImageView cropImageView;
-    @Optional @InjectView(R.id.crop_back_button)    ImageButton cropBackBtn;
-    @Optional @InjectView(R.id.crop_done_button)    ImageButton cropDoneBtn;
-    @Optional @InjectView(R.id.crop_cancel_button)  ImageButton cropCancelBtn;
+    @Optional
+    @InjectView(R.id.CropImageView)
+    CropImageView cropImageView;
+    @Optional
+    @InjectView(R.id.crop_back_button)
+    ImageButton cropBackBtn;
+    @Optional
+    @InjectView(R.id.crop_done_button)
+    ImageButton cropDoneBtn;
+    @Optional
+    @InjectView(R.id.crop_cancel_button)
+    ImageButton cropCancelBtn;
 
     //Process Page
-    @Optional @InjectView(R.id.process_logo)    ImageView img;
+    @Optional
+    @InjectView(R.id.process_logo)
+    ImageView img;
 
-    Context context;
-    DisplayMetrics displayMetrics;
+    private Context context;
+    private DisplayMetrics displayMetrics;
     private Stage currentStage;
     private RelativeLayout introView;
     private LinearLayout.LayoutParams introParams;
@@ -144,14 +179,8 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
     private String mResMD5;
     private String mResPicDesc;
 
-    private final Handler handler = new Handler();
-
-    private PagerSlidingTabStrip tabs;
-    private ViewPager pager;
-    private MyPagerAdapter adapter;
-
-    private Drawable oldBackground = null;
-    private int currentColor = 0xFF666666;
+    private HomePagerAdapter adapter;
+    //private int currentColor = 0xFF666666;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -189,6 +218,8 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         }
 
         initializeViews();
+
+        onScrollChanged(0, false, false);
     }
 
     private void initProcessUI() {
@@ -323,7 +354,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
                 } else {
                     mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
-                onScrollChanged(0, false, false);
+//                onScrollChanged(0, false, false);
             }
         });
     }
@@ -420,51 +451,35 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         text_overlay = findViewById(R.id.text_overlay);
         text_overlay_params = (RelativeLayout.LayoutParams) text_overlay.getLayoutParams();
 
-        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        pager = (ViewPager) findViewById(R.id.pager);
-        adapter = new MyPagerAdapter(getSupportFragmentManager());
+        adapter = new HomePagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
-
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
         pager.setPageMargin(pageMargin);
 
         tabs.setViewPager(pager);
+        pager.setCurrentItem(0);
 
-        changeColor(currentColor);
+        tabs.setIndicatorColor(getResources().getColor(R.color.primary));
+        //changeColor(currentColor);
+
+        viewSwitchBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = pager.getCurrentItem();
+                        adapter.getPager(position).getAdapter().toggle();
+                    }
+                }
+        );
     }
 
-    private void changeColor(int newColor) {
-
-        tabs.setIndicatorColor(newColor);
-        currentColor = newColor;
-
-    }
-
-    public class MyPagerAdapter extends FragmentPagerAdapter {
-
-        private final String[] TITLES = { "Categories", "Home", "Top Paid", "Top Free", "Top Grossing", "Top New Paid",
-                "Top New Free", "Trending" };
-
-        public MyPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return TITLES[position];
-        }
-
-        @Override
-        public int getCount() {
-            return TITLES.length;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return SuperAwesomeCardFragment.newInstance(position);
-        }
-    }
+//    private void changeColor(int newColor) {
+//
+//        tabs.setIndicatorColor(newColor);
+//        currentColor = newColor;
+//
+//    }
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
@@ -736,14 +751,14 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         outState.putString("imgFileName", imgFileName);
     }
 
-    public byte[] getJpg(Bitmap bitmap) {
+    byte[] getJpg(Bitmap bitmap) {
         ByteArrayOutputStream outs = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 10, outs);
 
         return outs.toByteArray();
     }
 
-    public void turnToResultActivity(boolean isFound) {
+    void turnToResultActivity(boolean isFound) {
         currentStage = Stage.RESULT;
 
         Intent it = new Intent(this, ResultActivity.class);

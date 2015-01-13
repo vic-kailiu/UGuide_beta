@@ -23,7 +23,7 @@ import android.view.ViewTreeObserver;
 /**
  * Utilities for creating scrolling effects.
  */
-public final class ScrollUtils {
+final class ScrollUtils {
 
     private ScrollUtils() {
     }
@@ -105,7 +105,7 @@ public final class ScrollUtils {
      * @param rgbColor target color
      * @return CMYK array
      */
-    public static float[] cmykFromRgb(int rgbColor) {
+    private static float[] cmykFromRgb(int rgbColor) {
         int red = (0xff0000 & rgbColor) >> 16;
         int green = (0xff00 & rgbColor) >> 8;
         int blue = (0xff & rgbColor);
@@ -130,7 +130,7 @@ public final class ScrollUtils {
      *             and should be set in this order: cyan, magenta, yellow, black.
      * @return ARGB color. Alpha is fixed value (255).
      */
-    public static int rgbFromCmyk(float[] cmyk) {
+    private static int rgbFromCmyk(float[] cmyk) {
         float cyan = cmyk[0];
         float magenta = cmyk[1];
         float yellow = cmyk[2];

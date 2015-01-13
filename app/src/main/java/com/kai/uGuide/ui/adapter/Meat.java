@@ -44,5 +44,4 @@ public class Meat {
             new Meat(R.drawable.p10, "Tenth"),
             new Meat(R.drawable.p11, "Eleventh"),
     };
-
 }

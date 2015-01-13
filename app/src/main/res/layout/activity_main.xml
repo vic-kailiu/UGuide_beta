@@ -77,22 +77,29 @@
             <RelativeLayout
                 android:id="@+id/pagerLayout"
                 android:layout_width="fill_parent"
-                android:layout_height="400dp"
+                android:layout_height="365dp"
                 android:background="@color/white">
 
                 <com.astuetz.PagerSlidingTabStrip
                     android:id="@+id/tabs"
                     android:layout_width="match_parent"
-                    android:layout_height="48dip"
+                    android:layout_height="62dip"
                     android:background="@drawable/background_tabs" />
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/pager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/colors"
                     android:layout_below="@+id/tabs"
                     tools:context=".MainActivity" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/viewSwitch"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_action_grid" />
 
             </RelativeLayout>
 
