@@ -101,6 +101,10 @@ public class AdapterTransitionFragment extends Fragment implements Transition.Tr
         switch (position)
         {
             case 0: return Home.Attractions;
+            case 1: return Home.Tours;
+            case 2: return Home.Foods;
+            case 3: return Home.Hotels;
+            case 4: return Home.Events;
         }
         return Home.Attractions;
     }

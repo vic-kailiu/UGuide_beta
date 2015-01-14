@@ -36,7 +36,7 @@ limitations under the License.
         android:scaleType="fitCenter"
         tools:src="@drawable/p1"
         android:layout_centerInParent="true"/>
-</RelativeLayout>
+    </RelativeLayout>
 
 <TextView
         android:id="@+id/meat_title"
@@ -46,7 +46,7 @@ limitations under the License.
         android:layout_marginStart="?android:attr/listPreferredItemPaddingStart"
         android:layout_toEndOf="@id/image_holder"
         android:gravity="center_vertical"
-        android:textSize="20sp"
+        android:textSize="18sp"
         tools:text="Title"/>
 
 </RelativeLayout>

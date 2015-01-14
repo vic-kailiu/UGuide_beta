@@ -26,6 +26,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,7 +49,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kai.uGuide.ui.adapter.HomePagerAdapter;
+import com.kai.uGuide.ui.fragment.CurrentWeatherFragment;
 import com.kai.uGuide.ui.fragment.ScrollMapFragment;
+import com.kai.uGuide.ui.fragment.WeatherFragment;
 import com.kai.uGuide.utils.PicShrink;
 import com.nineoldandroids.view.ViewHelper;
 import com.qq.wx.img.imgsearcher.ImgListener;
@@ -67,7 +70,7 @@ import butterknife.InjectView;
 import butterknife.Optional;
 
 
-public class MainActivity extends ActionBarActivity implements ObservableScrollViewCallbacks, ImgListener {
+public class MainActivity extends ActionBarActivity implements ObservableScrollViewCallbacks, ImgListener, WeatherFragment.WeatherEventListener {
 
     public enum Stage {
         MAIN,
@@ -127,6 +130,10 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
 
     // Google Map
     private ScrollMapFragment mapFragment;
+
+    @Optional
+    @InjectView(R.id.currentWeatherFrag)
+    FrameLayout weatherView;
 
     //Result Page
     @Optional
@@ -218,6 +225,8 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         }
 
         initializeViews();
+
+        initializeWeatherFrag();
     }
 
     private void initProcessUI() {
@@ -477,6 +486,14 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         );
     }
 
+    private void initializeWeatherFrag() {
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setTransitionStyle(R.style.fragmentAnim);
+        CurrentWeatherFragment cf = CurrentWeatherFragment.newInstance();
+        ft.add(R.id.currentWeatherFrag, cf, "currentWeather") ;
+        ft.commit();
+    }
+
 //    private void changeColor(int newColor) {
 //
 //        tabs.setIndicatorColor(newColor);
@@ -494,7 +511,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
 
         // Change alpha of overlay
         ViewHelper.setAlpha(mOverlayView, Math.max(0, Math.min(1, (float) scrollY / flexibleRange)));
-        //ViewHelper.setAlpha(weatherView, 1 - Math.max(0, Math.min(1, (float) scrollY / flexibleRange * 2)));
+        ViewHelper.setAlpha(weatherView, 1 - Math.max(0, Math.min(1, (float) scrollY / flexibleRange * 2)));
 
         // Scale title text
         float scale = 1 + Math.max(0, Math.min(MAX_TEXT_SCALE_DELTA, (flexibleRange - scrollY) / flexibleRange));
@@ -645,6 +662,11 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
 
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+
+    }
+
+    @Override
+    public void requestCompleted() {
 
     }
 
