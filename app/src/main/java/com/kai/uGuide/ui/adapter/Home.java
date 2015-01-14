@@ -29,7 +29,7 @@ public class Home {
     public static final ListItem[] Foods = {
             new ListItem(R.drawable.t_crab,              R.drawable.chilli_crab,     "Chili Crab"),
             new ListItem(R.drawable.t_soup,    R.drawable.bak_kut_eh,      "Bak Kut Teh"),
-            new ListItem(R.drawable.t_meat,              R.drawable.chicken_rice,    "Chicken Rice"),
+            new ListItem(R.drawable.t_dish,              R.drawable.chicken_rice,    "Chicken Rice"),
             new ListItem(R.drawable.t_noodle,              R.drawable.laksa,           "Laksa"),
             new ListItem(R.drawable.t_meat,     R.drawable.satay,           "Satay"),
     };

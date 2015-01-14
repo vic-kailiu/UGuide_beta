@@ -26,9 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-/**
- * Created by Francesco on 20/03/14.
- */
 public class WeatherUtil {
 
     public static int getResource(float val, WeatherConfig config) {

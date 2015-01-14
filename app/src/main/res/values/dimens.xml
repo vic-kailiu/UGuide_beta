@@ -5,7 +5,7 @@
     <dimen name="margin_short">8dp</dimen>
     <dimen name="margin_extra_short">4dp</dimen>
     <dimen name="flexible_space_image_height">450dp</dimen>
-    <dimen name="flexible_space_show_fab_offset">120dp</dimen>
+    <dimen name="flexible_space_show_fab_offset">-70dp</dimen>
     <dimen name="sectionViewMinHeight">150dp</dimen>
     <dimen name="sectionViewMidHeight">220dp</dimen>
     <dimen name="sectionViewMaxHeight">300dp</dimen>

@@ -6,11 +6,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.kai.uGuide.ui.fragment.SuperAwesomeCardFragment;
 
+import java.util.ArrayList;
+
 public class HomePagerAdapter extends FragmentPagerAdapter {
 
     private final String[] TITLES = {"Attractions", "Tours", "Food", "Hotels", "Events"};
-    private SuperAwesomeCardFragment[] items = new SuperAwesomeCardFragment[10];
-    private SuperAwesomeCardFragment item;
+    private ArrayList<SuperAwesomeCardFragment> items = new ArrayList<SuperAwesomeCardFragment>();
 
     public HomePagerAdapter(FragmentManager fm) {
         super(fm);
@@ -28,17 +29,18 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        items[position] = SuperAwesomeCardFragment.newInstance(position);
-        return items[position];
+        items.add(position, SuperAwesomeCardFragment.newInstance(position) );
+        return items.get(position);
         //return getPager(position);
     }
+//
+//    @Override
+//    public int getItemPosition(Object object) {
+//        return POSITION_NONE;
+//    }
 
     public SuperAwesomeCardFragment getPager(int position) {
-//        if (items[position] == null) {
-//            items[position] = SuperAwesomeCardFragment.newInstance(position);
-//        }
-//
-        return items[position];
+        return items.get(position);
         //return SuperAwesomeCardFragment.newInstance(position);
     }
 }

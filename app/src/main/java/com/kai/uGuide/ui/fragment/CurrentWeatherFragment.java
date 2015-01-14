@@ -65,8 +65,7 @@ public class CurrentWeatherFragment extends WeatherFragment {
     private WeatherConfig config;
 
     public static CurrentWeatherFragment newInstance() {
-        CurrentWeatherFragment fragment = new CurrentWeatherFragment();
-        return fragment;
+        return new CurrentWeatherFragment();
     }
     public CurrentWeatherFragment() {
     }

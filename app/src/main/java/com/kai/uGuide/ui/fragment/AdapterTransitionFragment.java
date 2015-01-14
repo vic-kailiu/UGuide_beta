@@ -36,8 +36,6 @@ import com.kai.uGuide.ui.adapter.Home;
 import com.kai.uGuide.ui.adapter.ListItem;
 import com.kai.uGuide.ui.adapter.MeatAdapter;
 
-import java.util.List;
-
 /**
  * Main screen for AdapterTransition sample.
  */

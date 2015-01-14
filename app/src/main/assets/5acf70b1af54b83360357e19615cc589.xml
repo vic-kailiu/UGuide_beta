@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed>
+    <entry>
+        <id>http://stackoverflow.com/q/27664167</id>
+        <title type="text">ArtScience Museum</title>
+        <category scheme="http://stackoverflow.com/tags" term="android" />
+        <lati>1.286274</lati>
+        <longi>103.859266</longi>
+        <author>
+            <name>Dexter</name>
+            <uri>http://stackoverflow.com/users/4397130</uri>
+        </author>
+        <path>
+            <poly>qsyFsc|xRnAt@_@h@OGyCfBHNk@hAmBy@m@Y_Ca@w@b@k@HeAKk@a@Yw@PqANf@</poly>
+            <poly>wgzFqa|xROg@TWPQTi@MCeAa@]Is@KkAKiBBqAPm@NMFSdC?CME]EQEa@Ck@KMGJmCDsA@aAB_@Bw@H}ACQIQ]UkAc@LOXMd@GdAz@LJL@NELKc@k@OAYGs@]GIAI@KRY</poly>
+            <poly>wgzFqa|xROg@TWPQTi@MCeAa@]Is@KkAKiBBqAPm@NMFSdC[xLIlEMd@ET@^Fj@B~@@rDa@CEBCBm@GARcBU</poly>
+            <poly>q}zFcb{xRxEh@jLfAW{A</poly>
+        </path>
+        <route>
+            <place>
+                <spot>
+                    <lati>1.286274</lati>
+                    <longi>103.859266</longi>
+                </spot>
+                <spot>
+                    <lati>1.283649</lati>
+                    <longi>103.860346</longi>
+                </spot>
+                <spot>
+                    <lati>1.286848</lati>
+                    <longi>103.854532</longi>
+                </spot>
+                <spot>
+                    <lati>1.289299</lati>
+                    <longi>103.863137</longi>
+                </spot>
+                <spot>
+                    <lati>1.289793</lati>
+                    <longi>103.855817</longi>
+                </spot>
+                <spot>
+                    <lati>1.2876834</lati>
+                    <longi>103.8605974</longi>
+                </spot>
+            </place>
+            <path>
+                <poly>qsyFsc|xRnAt@_@h@OGyCfBHNk@hAmBy@m@Y_Ca@w@b@k@HeAKk@a@Yw@PqANf@</poly>
+                <poly>wgzFqa|xROg@TWPQTi@MCeAa@]Is@KkAKiBBqAPm@NMFSdC?CME]EQEa@Ck@KMGJmCDsA@aAB_@Bw@H}ACQIQ]UkAc@LOXMd@GdAz@LJL@NELKc@k@OAYGs@]GIAI@KRY</poly>
+                <poly>wgzFqa|xROg@TWPQTi@MCeAa@]Is@KkAKiBBqAPm@NMFSdC[xLIlEMd@ET@^Fj@B~@@rDa@CEBCBm@GARcBU</poly>
+                <poly>q}zFcb{xRxEh@jLfAW{A</poly>
+            </path>
+        </route>
+        <food>
+            <spot></spot>
+            <spot></spot>
+            <spot></spot>
+        </food>
+        <shop>
+            <spot></spot>
+            <spot></spot>
+            <spot></spot>
+        </shop>
+        <summary>ArtScience Museum is one of the attractions at Marina Bay Sands. Opened on 17 February 2011 by Singapore's Prime Minister Lee Hsien Loong, it is the world's first ArtScience museum. Although it has a permanent exhibition, ArtScience Gallery, the ArtScience Museum mainly hosts touring exhibitions curated by other museums.</summary>
+    </entry>
+</feed>

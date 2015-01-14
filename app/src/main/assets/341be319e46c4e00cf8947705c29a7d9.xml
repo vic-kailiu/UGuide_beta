@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed>
+    <entry>
+        <id>http://stackoverflow.com/q/27664167</id>
+        <title type="text">The world's most expensive building</title>
+        <category scheme="http://stackoverflow.com/tags" term="android" />
+        <lati>1.283649</lati>
+        <longi>103.860346</longi>
+        <path>
+            <poly>qsyFsc|xRnAt@_@h@OGyCfBHNk@hAmBy@m@Y_Ca@w@b@k@HeAKk@a@Yw@PqANf@</poly>
+            <poly>wgzFqa|xROg@TWPQTi@MCeAa@]Is@KkAKiBBqAPm@NMFSdC?CME]EQEa@Ck@KMGJmCDsA@aAB_@Bw@H}ACQIQ]UkAc@LOXMd@GdAz@LJL@NELKc@k@OAYGs@]GIAI@KRY</poly>
+            <poly>wgzFqa|xROg@TWPQTi@MCeAa@]Is@KkAKiBBqAPm@NMFSdC[xLIlEMd@ET@^Fj@B~@@rDa@CEBCBm@GARcBU</poly>
+            <poly>q}zFcb{xRxEh@jLfAW{A</poly>
+        </path>
+        <author>
+            <name>Dexter</name>
+            <uri>http://stackoverflow.com/users/4397130</uri>
+        </author>
+        <summary>Marina Bay Sands is an integrated resort fronting Marina Bay in Singapore.Developed by Las Vegas Sands (LVS), it is the world's most expensive building, at US$4.7billion, including the cost of the prime land.</summary>
+    </entry>
+</feed>

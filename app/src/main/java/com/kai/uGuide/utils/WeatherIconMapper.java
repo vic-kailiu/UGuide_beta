@@ -26,30 +26,37 @@ public class WeatherIconMapper {
 		if (wId == 212)
 			return R.drawable.w212d;
 
-		if (id.equals("01d"))
-			return R.drawable.w01d;
-		else if (id.equals("01n")) 
-			return R.drawable.w01n;
-		else if (id.equals("02d") || id.equals("02n"))
-			return R.drawable.w02d;
-		else if (id.equals("03d") || id.equals("03n"))		
-			return R.drawable.w03d;
-		else if (id.equals("03d") || id.equals("03n"))		
-			return R.drawable.w03d;
-        else if (id.equals("04d") || id.equals("04n"))
-            return R.drawable.w04d;
-		else if (id.equals("09d") || id.equals("09n"))		
-			return R.drawable.w500d;
-		else if (id.equals("10d") || id.equals("10n"))		
-			return R.drawable.w501d;
-		else if (id.equals("11d") || id.equals("11n"))		
-			return R.drawable.w212d;
-		else if (id.equals("13d") || id.equals("13n"))		
-			return R.drawable.w13d;
-		else if (id.equals("50d") || id.equals("50n"))		
-			return R.drawable.w50d;
-		
-		
+        switch (id) {
+            case "01d":
+                return R.drawable.w01d;
+            case "01n":
+                return R.drawable.w01n;
+            case "02d":
+            case "02n":
+                return R.drawable.w02d;
+            case "03d":
+            case "03n":
+                return R.drawable.w03d;
+            case "04d":
+            case "04n":
+                return R.drawable.w04d;
+            case "09d":
+            case "09n":
+                return R.drawable.w500d;
+            case "10d":
+            case "10n":
+                return R.drawable.w501d;
+            case "11d":
+            case "11n":
+                return R.drawable.w212d;
+            case "13d":
+            case "13n":
+                return R.drawable.w13d;
+            case "50d":
+            case "50n":
+                return R.drawable.w50d;
+        }
+
 		return R.drawable.w01d;
 		
 	}

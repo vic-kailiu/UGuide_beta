@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
@@ -35,6 +36,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.daimajia.easing.Glider;
+import com.daimajia.easing.Skill;
 import com.edmodo.cropper.CropImageView;
 import com.enrique.stackblur.StackBlurManager;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
@@ -53,7 +58,12 @@ import com.kai.uGuide.ui.fragment.CurrentWeatherFragment;
 import com.kai.uGuide.ui.fragment.ScrollMapFragment;
 import com.kai.uGuide.ui.fragment.WeatherFragment;
 import com.kai.uGuide.utils.PicShrink;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorSet;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.qq.wx.img.imgsearcher.ImgListener;
 import com.qq.wx.img.imgsearcher.ImgResult;
 import com.qq.wx.img.imgsearcher.ImgSearcher;
@@ -135,13 +145,26 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
     @InjectView(R.id.currentWeatherFrag)
     FrameLayout weatherView;
 
-    //Result Page
+    private boolean mFabIsShown;
+    private int mFlexibleSpaceShowFabOffset;
+
+    //Search Page
     @Optional
     @InjectView(R.id.cancel)
-    Button mCancelBtn;
+    FrameLayout mCancelBtn;
     @Optional
     @InjectView(R.id.start_searching)
     TextView mTextView;
+    @Optional
+    @InjectView(R.id.searchImageView)
+    ImageView searchImageView;
+    @Optional
+    @InjectView(R.id.searchImageFrame)
+    View searchImageFrame;
+    @Optional
+    @InjectView(R.id.scan)
+    ImageView scan;
+
     int mInitSucc = 0;
 
     //Crop Page
@@ -186,6 +209,9 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
     private String mResMD5;
     private String mResPicDesc;
 
+    private AnimatorSet set1;
+    private AnimatorSet set2;
+
     private HomePagerAdapter adapter;
     //private int currentColor = 0xFF666666;
 
@@ -201,6 +227,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
 
         initMainUI();
         preInitImg();
+        preIniteSearchAnimation();
     }
 
     private void initMainUI() {
@@ -305,6 +332,53 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(), bmBlurred));
     }
 
+    private void preIniteSearchAnimation() {
+        set1 = new AnimatorSet();
+        set2 = new AnimatorSet();
+        set1.addListener(
+                new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        set2.start();
+                    }
+
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                }
+        );
+        set2.addListener(
+                new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        set1.start();
+                    }
+
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                }
+        );
+    }
+
     @SuppressWarnings("deprecation")
     private void initSearchUI() {
         setContentView(R.layout.layout_search);
@@ -314,12 +388,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
             resetBackground();
         currentStage = Stage.SEARCH;
 
-        LinearLayout mLinearLayout = (LinearLayout) findViewById(R.id.staff);
-
-        Drawable mDrawable = new BitmapDrawable(getResources(), bmCropped);
-        mLinearLayout.setBackgroundDrawable(mDrawable);
         mCancelBtn.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
@@ -329,6 +398,41 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
                 }
             }
         });
+
+        searchImageView.setImageBitmap(bmCropped);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)searchImageFrame.getLayoutParams();
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        params.height = displayMetrics.heightPixels / 2;
+        params.width = displayMetrics.widthPixels / 2;
+        searchImageFrame.setLayoutParams(params);
+
+        int height;
+        int startY = 0;
+        int endY;
+        int offset = 15;
+
+        double frameRatio = 1.0 * displayMetrics.heightPixels / displayMetrics.widthPixels;
+        double imageRatio = 1.0 * bmCropped.getHeight() / bmCropped.getWidth();
+        if (imageRatio < frameRatio) { //image is longer
+            height = (int)(displayMetrics.widthPixels / 2 * imageRatio);
+            startY = (displayMetrics.heightPixels / 2 - height) / 2;
+        } else {
+            height = displayMetrics.heightPixels / 2;
+            ViewHelper.setScaleX(scan, (float)(frameRatio/imageRatio * 1.1) );
+            ViewHelper.setScaleY(scan, (float) (frameRatio / imageRatio * 1.1));
+        }
+
+        startY = startY - offset;
+        endY = startY + height - offset;
+
+        ValueAnimator animator1 = ObjectAnimator.ofFloat(scan, "translationY", startY, endY);
+        ValueAnimator animator2 = ObjectAnimator.ofFloat(scan, "translationY", endY, startY);
+
+        set1.play(Glider.glide(Skill.ExpoEaseInOut, 1500, animator1));
+        set2.play(Glider.glide(Skill.ExpoEaseInOut, 1500, animator2));
+        set1.setDuration(1500);
+        set2.setDuration(1500);
+        set1.start();
 
         byte[] imgByte = getJpg(bmCropped);
         int ret = startImgSearching(imgByte);
@@ -341,7 +445,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
 
     private void initializeScrollView() {
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
-//        mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
+        mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mActionBarSize = getActionBarSize();
         mToolbarColor = getResources().getColor(R.color.primary);
 
@@ -362,8 +466,8 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
                     mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
 
-//                mScrollView.scrollTo(0, 1);
-//                mScrollView.scrollTo(0, 0);
+                mScrollView.scrollTo(0, 1);
+                mScrollView.scrollTo(1, 0);
 
 //                onScrollChanged(0, false, false);
             }
@@ -405,6 +509,7 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         });
 
         mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
+        mFabIsShown = true;
 //        ViewHelper.setScaleX(mFab, 0);
 //        ViewHelper.setScaleY(mFab, 0);
     }
@@ -464,12 +569,15 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         text_overlay_params = (RelativeLayout.LayoutParams) text_overlay.getLayoutParams();
 
         adapter = new HomePagerAdapter(getSupportFragmentManager());
+        pager.setAdapter(null);
         pager.setAdapter(adapter);
+//        adapter.notifyDataSetChanged();
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
         pager.setPageMargin(pageMargin);
 
         tabs.setViewPager(pager);
+        pager.setCurrentItem(1);
         pager.setCurrentItem(0);
 
         tabs.setIndicatorColor(getResources().getColor(R.color.primary));
@@ -655,6 +763,24 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         view.setBackgroundColor(a + rgb);
     }
 
+    private void showFab() {
+        if (!mFabIsShown) {
+            ViewPropertyAnimator.animate(mFab).cancel();
+            ViewPropertyAnimator.animate(mFab).alpha(1).setDuration(200).start();
+            //ViewPropertyAnimator.animate(mFab).scaleX(1).scaleY(1).setDuration(200).start();
+            mFabIsShown = true;
+        }
+    }
+
+    private void hideFab() {
+        if (mFabIsShown) {
+            ViewPropertyAnimator.animate(mFab).cancel();
+            ViewPropertyAnimator.animate(mFab).alpha(0).setDuration(200).start();
+            //ViewPropertyAnimator.animate(mFab).scaleX(0).scaleY(0).setDuration(200).start();
+            mFabIsShown = false;
+        }
+    }
+
     @Override
     public void onDownMotionEvent() {
 
@@ -683,10 +809,10 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         double imgRatio = 1.0 * bm.getWidth() / bm.getHeight();
         if (imgRatio > screenRatio) {
             width = (int) (height * screenRatio);
-            x = (int) ((bm.getWidth() - width) / 2);
+            x = (int) ((bm.getWidth() - width) / 2.0);
         } else if (imgRatio < screenRatio) {
             height = (int) (width / screenRatio);
-            y = (int) ((bm.getHeight() - height) / 2);
+            y = (int) ((bm.getHeight() - height) / 2.0);
         }
         Bitmap fitImg = Bitmap.createBitmap(bm, x, y, width, height);
 
@@ -786,15 +912,26 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
     void turnToResultActivity(boolean isFound) {
         currentStage = Stage.RESULT;
 
-        Intent it = new Intent(this, ResultActivity.class);
+        final Intent it = new Intent(this, ResultActivity.class);
         Bundle bundle = new Bundle();
         bundle.putBoolean("ret", isFound);
         bundle.putString("url", mResUrl);
         bundle.putString("md5", mResMD5);
         bundle.putString("picDesc", mResPicDesc);
         it.putExtras(bundle);
-        startActivity(it);
-        //finish();
+
+        set1.cancel();
+        set2.cancel();
+        ViewHelper.setAlpha(scan, 0);
+        YoYo.with(Techniques.ZoomOutUp)//Techniques.FadeOutUp)
+                .duration(1000)
+                .playOn(searchImageFrame);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(it);
+            }
+        }, 1100);
     }
 
     //endregion
@@ -805,8 +942,9 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
 
         if (currentStage == Stage.RESULT)
             initMainUI();
-        else if (currentStage == Stage.MAIN)
+        else if (currentStage == Stage.MAIN) {
             initializeMap();
+        }
     }
 
     @Override
