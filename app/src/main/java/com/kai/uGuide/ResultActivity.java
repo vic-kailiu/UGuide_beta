@@ -392,9 +392,17 @@ public void onClick(View v) {
         introParams = (LinearLayout.LayoutParams) introView.getLayoutParams();
         ListView listView = (ListView) findViewById(R.id.list_view);
         listAdapter = new AtomPayListAdapter(ResultActivity.this, R.layout.item_speech_list, new ArrayList<AtomPayment>());
-        listAdapter.insert(new AtomPayment("oppps", R.drawable.earth), 0);
-        listAdapter.insert(new AtomPayment("smelly", R.drawable.earth), 0);
-        listAdapter.insert(new AtomPayment("cat", R.drawable.earth), 0);
+        String[] item;
+        String[] itemTitle;
+        switch (mResPicDesc){
+            case "Merlion": item = Result.TMerlion; itemTitle = Result.TTMerlion; break;
+            case "Esplanade": item = Result.TEsplanade; itemTitle = Result.TTEsplanade; break;
+            case "Marina Bay Sands": item = Result.TMarinaBaySands; itemTitle = Result.TTMarinaBaySands; break;
+            default: item = Result.TMerlion; itemTitle = Result.TTMerlion;
+        }
+        listAdapter.insert(new AtomPayment("A Brief Introduction", R.drawable.earth, "foo"), 0);
+        listAdapter.insert(new AtomPayment(itemTitle[0], R.drawable.ic_wiki, item[0]), 0);
+        listAdapter.insert(new AtomPayment(itemTitle[1], R.drawable.ic_ysg, item[1]), 0);
         listView.setAdapter(listAdapter);
         listView.setOnTouchListener(new View.OnTouchListener() {
             // Setting on Touch Listener for handling the touch inside ScrollView
@@ -432,30 +440,19 @@ public void onClick(View v) {
         TextView title = (TextView) findViewById(R.id.result_title);
         title.setText(mResPicDesc);
 
-//        TextView speechTitle = (TextView) findViewById(R.id.title);
-//        speechTitle.setText(entries.get(0).title);
-//
-//        Context context = getApplicationContext();
-//        //TODO:could move it to splash maybe
-//        NuanceTTS.SetUpNuanceTTS(context);
-//
-//        // Create a single Vocalizer here.
-//        _vocalizer = NuanceTTS.getSpeechKit().createVocalizerWithLanguage("en_US", this, new Handler());
-//        _vocalizer.setVoice("Ava");
+        Context context = getApplicationContext();
+        //TODO:could move it to splash maybe
+        NuanceTTS.SetUpNuanceTTS(context);
 
-//        ImageButton play = (ImageButton) findViewById(R.id.result_play);
-//        play.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                _ttsContext = new Object();
-//                _vocalizer.speakString(entries.get(0).summary, _ttsContext);
-//            }
-//        });
+        // Create a single Vocalizer here.
+        _vocalizer = NuanceTTS.getSpeechKit().createVocalizerWithLanguage("en_US", this, new Handler());
+        _vocalizer.setVoice("Ava");
     }
 
     public void removeAtomPayOnClickHandler(View v) {
         AtomPayment itemToRemove = (AtomPayment)v.getTag();
-        listAdapter.remove(itemToRemove);
+        _ttsContext = new Object();
+        _vocalizer.speakString(itemToRemove.getSpeech(), _ttsContext);
     }
 
     private void showFab() {

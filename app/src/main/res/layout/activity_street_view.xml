@@ -9,14 +9,63 @@
             android:layout_height="fill_parent"
             class="com.google.android.gms.maps.SupportStreetViewPanoramaFragment"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Merlion"
-            android:id="@+id/textView2"
-            android:textIsSelectable="false"
-            android:textSize="20sp"
-            android:background="@drawable/street_view_overlay"
-            android:gravity="center"
-            android:padding="30dp"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Merlion"
+        android:textIsSelectable="false"
+        android:textSize="16sp"
+        android:background="@drawable/street_view_overlay"
+        android:gravity="center"
+        android:padding="10dp"
+        android:id="@+id/buttonMer"
+        android:textColor="@color/white_pressed" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Esplanade"
+        android:textIsSelectable="false"
+        android:textSize="16sp"
+        android:background="@drawable/street_view_overlay"
+        android:gravity="center"
+        android:padding="10dp"
+        android:id="@+id/buttonEsp"
+        android:textColor="@color/white_pressed" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="The Singapore Flyer"
+        android:textIsSelectable="false"
+        android:textSize="16sp"
+        android:background="@drawable/street_view_overlay"
+        android:gravity="center"
+        android:padding="10dp"
+        android:id="@+id/buttonFly"
+        android:textColor="@color/white_pressed" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Art Science Museum"
+        android:textIsSelectable="false"
+        android:textSize="16sp"
+        android:background="@drawable/street_view_overlay"
+        android:gravity="center"
+        android:padding="10dp"
+        android:id="@+id/buttonArt"
+        android:textColor="@color/white_pressed" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Marina Bay Sands"
+        android:textIsSelectable="false"
+        android:textSize="16sp"
+        android:background="@drawable/street_view_overlay"
+        android:gravity="center"
+        android:padding="10dp"
+        android:id="@+id/buttonMBS"
+        android:textColor="@color/white_pressed" />
 </RelativeLayout>

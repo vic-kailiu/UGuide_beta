@@ -7,10 +7,12 @@ public class AtomPayment implements Serializable {
 	
 	private String name = "";
 	private double value = 0;
+    private String speech;
 
-	public AtomPayment(String name, double value) {
+	public AtomPayment(String name, double value, String speech) {
 		this.setName(name);
 		this.setValue(value);
+        this.setSpeech(speech);
 	}
 
 	public String getName() {
@@ -28,4 +30,12 @@ public class AtomPayment implements Serializable {
 	public void setValue(double value) {
 		this.value = value;
 	}
+
+    public String getSpeech() {
+        return speech;
+    }
+
+    public void setSpeech(String speech) {
+        this.speech = speech;
+    }
 }
