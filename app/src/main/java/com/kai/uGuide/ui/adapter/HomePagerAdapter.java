@@ -10,11 +10,12 @@ import java.util.ArrayList;
 
 public class HomePagerAdapter extends FragmentPagerAdapter {
 
-    private final String[] TITLES = {"Attractions", "Tours", "Food", "Hotels", "Events"};
+    private String[] TITLES;
     private ArrayList<SuperAwesomeCardFragment> items = new ArrayList<SuperAwesomeCardFragment>();
 
-    public HomePagerAdapter(FragmentManager fm) {
+    public HomePagerAdapter(FragmentManager fm, String[] TITLES) {
         super(fm);
+        this.TITLES = TITLES;
     }
 
     @Override
@@ -29,15 +30,13 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        items.add(position, SuperAwesomeCardFragment.newInstance(position) );
+        if (TITLES == Home.TITLES)
+            items.add(position, SuperAwesomeCardFragment.newInstance(position, 0) );
+        else
+            items.add(position, SuperAwesomeCardFragment.newInstance(position, 1) );
         return items.get(position);
         //return getPager(position);
     }
-//
-//    @Override
-//    public int getItemPosition(Object object) {
-//        return POSITION_NONE;
-//    }
 
     public SuperAwesomeCardFragment getPager(int position) {
         return items.get(position);

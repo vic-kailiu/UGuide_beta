@@ -14,10 +14,11 @@
   limitations under the License.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/resultImageFrame"
@@ -53,40 +54,8 @@
                 android:layout_height="@dimen/flexible_space_image_height"
                 android:background="@android:color/transparent" />
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:id="@+id/resultFrame"
-                android:layout_width="fill_parent"
-                android:layout_height="110dp"
-                android:background="@color/white"
-                android:padding="40dp">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="fill_parent"
-                    android:id="@+id/logo"
-                    android:src="@drawable/earth" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Large Text"
-                    android:id="@+id/title"
-                    android:textColor="@color/black"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="20dp" />
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/result_play"
-                    android:src="@drawable/ic_action_play"
-                    android:background="@null"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="20dp" />
-
-            </LinearLayout>
+            <ListView android:id="@+id/list_view" android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
 
             <RelativeLayout
                 android:id="@+id/result_mapView"
@@ -103,8 +72,34 @@
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="400dp">
+                android:layout_height="400dp"
+                android:background="@color/white">
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tabLayout">
+                    <com.astuetz.PagerSlidingTabStrip
+                        android:id="@+id/tabs"
+                        android:layout_width="match_parent"
+                        android:layout_height="62dip"
+                        android:background="@drawable/background_tabs" />
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/viewSwitch"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/ic_action_grid"
+                        android:layout_centerVertical="true"
+                        android:background="@null"
+                        android:layout_marginRight="10dp"/>
+                </RelativeLayout>
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tabLayout"
+                    tools:context=".ResultActivity" />
 
             </RelativeLayout>
         </LinearLayout>

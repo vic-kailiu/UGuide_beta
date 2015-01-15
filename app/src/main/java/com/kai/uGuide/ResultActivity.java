@@ -1,6 +1,7 @@
 package com.kai.uGuide;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -11,6 +12,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
@@ -20,11 +22,13 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -37,6 +41,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
+import com.kai.uGuide.ui.adapter.AtomPayListAdapter;
+import com.kai.uGuide.ui.adapter.HomePagerAdapter;
+import com.kai.uGuide.ui.adapter.Result;
 import com.kai.uGuide.utils.KeyResolver;
 import com.kai.uGuide.utils.NuanceTTS;
 import com.kai.uGuide.utils.XmlParser;
@@ -48,16 +55,32 @@ import com.nuance.nmdp.speechkit.Vocalizer.Listener;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.Optional;
 
-public class ResultActivity extends Activity implements ObservableScrollViewCallbacks, Listener {
+
+public class ResultActivity extends FragmentActivity implements ObservableScrollViewCallbacks, Listener {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private static final boolean TOOLBAR_IS_STICKY = false;
     private final int MAP_ZOOM = 15;
     List<XmlParser.Entry> entries;
     //About Results
+
+    @Optional
+    @InjectView(R.id.tabs)
+    PagerSlidingTabStrip tabs;
+    @Optional
+    @InjectView(R.id.pager)
+    ViewPager pager;
+    @Optional
+    @InjectView(R.id.viewSwitch)
+    ImageButton viewSwitchBtn;
+
     private String mResMD5;
     private String mResPicDesc;
     private View mToolbar;
@@ -87,6 +110,10 @@ public class ResultActivity extends Activity implements ObservableScrollViewCall
     private Vocalizer _vocalizer;
     private Object _ttsContext = null;
 
+    private HomePagerAdapter adapter;
+
+    private AtomPayListAdapter listAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +127,7 @@ public class ResultActivity extends Activity implements ObservableScrollViewCall
 
     public void resultUI() {
         setContentView(R.layout.activity_result);
+        ButterKnife.inject(this);
 
         AssetManager assetManager = this.getAssets();
         try {
@@ -202,8 +230,8 @@ public class ResultActivity extends Activity implements ObservableScrollViewCall
         if (factor > 1)
             return;
 
-        params.height = (int) getResources().getDimension(R.dimen.sectionViewMinHeight) + (int) (range * (1 - factor));// * factor));
-        view.setLayoutParams(params);
+//        params.height = (int) getResources().getDimension(R.dimen.sectionViewMinHeight) + (int) (range * (1 - factor));// * factor));
+//        view.setLayoutParams(params);
 
 //        text_overlay_params.height = (int) (factor * 100.0);
 //        text_overlay.setLayoutParams(text_overlay_params);
@@ -258,9 +286,9 @@ public class ResultActivity extends Activity implements ObservableScrollViewCall
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent it = new Intent(ResultActivity.this, MainActivity.class);
-//                startActivity(it);
-                finish();
+                Intent it = new Intent(ResultActivity.this, StreetViewActivity.class);
+                startActivity(it);
+                //finish();
             }
         });
 
@@ -284,10 +312,7 @@ public class ResultActivity extends Activity implements ObservableScrollViewCall
             }
 
             googleMap.setMyLocationEnabled(true); // false to disable
-            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-            googleMap.getUiSettings().setRotateGesturesEnabled(false);
-            googleMap.getUiSettings().setZoomGesturesEnabled(false);
-            googleMap.getUiSettings().setScrollGesturesEnabled(false);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
             LatLng pos = new LatLng(entries.get(0).lati, entries.get(0).longti);
             marker = googleMap.addMarker(
@@ -299,89 +324,74 @@ public class ResultActivity extends Activity implements ObservableScrollViewCall
                 List<LatLng> decodedPath = PolyUtil.decode(entries.get(0).path.get(i));
                 googleMap.addPolyline(new PolylineOptions().addAll(decodedPath).width(5).color(R.color.primary).zIndex(100));
             }
-            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.286274, 103.859266)).flat(true));
-            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.283649, 103.860346)).flat(true));
-            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.286848, 103.854532)).flat(true));
-            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.289299, 103.863137)).flat(true));
-            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.289793, 103.855817)).flat(true));
-            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.2876834, 103.8605974)).flat(true));
+            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.286274, 103.859266)).flat(true) );
+            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.283649, 103.860346)).flat(true) );
+            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.286848, 103.854532)).flat(true) );
+            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.289299, 103.863137)).flat(true) );
+            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.289793, 103.855817)).flat(true) );
+            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.2876834, 103.8605974)).flat(true) );
         }
     }
 
     private void initializeViews() {
-        introView = (LinearLayout) findViewById(R.id.resultFrame);
-        introParams = (LinearLayout.LayoutParams) introView.getLayoutParams();
+//        introView = (LinearLayout) findViewById(R.id.resultFrame);
+//        introParams = (LinearLayout.LayoutParams) introView.getLayoutParams();
+        ListView listView = (ListView) findViewById(R.id.list_view);
+        listAdapter = new AtomPayListAdapter(ResultActivity.this, R.layout.item_speech_list, new ArrayList<AtomPayment>());
+        listAdapter.insert(new AtomPayment("", 0), 0);
+        listAdapter.insert(new AtomPayment("", 0), 0);
+        listAdapter.insert(new AtomPayment("", 0), 0);
+        listView.setAdapter(listAdapter);
 
-//
-//        text_overlay = findViewById(R.id.result_text_overlay);
-//        text_overlay_params = (RelativeLayout.LayoutParams) text_overlay.getLayoutParams();
+        adapter = new HomePagerAdapter(getSupportFragmentManager(), Result.TITLES);
+        pager.setAdapter(null);
+        pager.setAdapter(adapter);
+        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                .getDisplayMetrics());
+        pager.setPageMargin(pageMargin);
+
+        tabs.setViewPager(pager);
+        pager.setCurrentItem(0);
+
+        tabs.setIndicatorColor(getResources().getColor(R.color.primary));
+
+        viewSwitchBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = pager.getCurrentItem();
+                        adapter.getPager(position).getAdapter().toggle();
+                    }
+                }
+        );
 
         TextView title = (TextView) findViewById(R.id.result_title);
         title.setText(mResPicDesc);
 
-        TextView speechTitle = (TextView) findViewById(R.id.title);
-        speechTitle.setText(entries.get(0).title);
-
-        Context context = getApplicationContext();
-        //TODO:could move it to splash maybe
-        NuanceTTS.SetUpNuanceTTS(context);
-
-        // Create a single Vocalizer here.
-        _vocalizer = NuanceTTS.getSpeechKit().createVocalizerWithLanguage("en_US", this, new Handler());
-        _vocalizer.setVoice("Ava");
-
-        ImageButton play = (ImageButton) findViewById(R.id.result_play);
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _ttsContext = new Object();
-                _vocalizer.speakString(entries.get(0).summary, _ttsContext);
-            }
-        });
-    }
-
-    private void initViewPager(int pageCount, int backgroundColor, int textColor) {
-//        mPager = (ViewPager) findViewById(R.id.result_pager);
-//        mPagerAdapter = new ExamplePagerAdapter(this, pageCount, backgroundColor, textColor);
-//        mPager.setAdapter(mPagerAdapter);
-//        mPager.setCurrentItem(1);
-//        mPager.setPageMargin(1);
-//        mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//                int foo = 1;
-//            }
+//        TextView speechTitle = (TextView) findViewById(R.id.title);
+//        speechTitle.setText(entries.get(0).title);
 //
-//            @Override
-//            public void onPageSelected(int position) {
-//                switch (position) {
-//                    case 0:
-//                        googleMap.clear();
-//                        for (int i = 0; i< entries.get(0).path.size(); i++) {
-//                            List<LatLng> decodedPath = PolyUtil.decode(entries.get(0).path.get(i));
-//                            googleMap.addPolyline(new PolylineOptions().addAll(decodedPath).width(5).color(R.color.primary).zIndex(100));
-//                        }
-//                        googleMap.addMarker( new MarkerOptions().position(new LatLng(1.286274, 103.859266)).flat(true));
-//                        googleMap.addMarker( new MarkerOptions().position(new LatLng(1.283649, 103.860346)).flat(true));
-//                        googleMap.addMarker( new MarkerOptions().position(new LatLng(1.286848, 103.854532)).flat(true));
-//                        googleMap.addMarker( new MarkerOptions().position(new LatLng(1.289299, 103.863137)).flat(true));
-//                        googleMap.addMarker( new MarkerOptions().position(new LatLng(1.289793, 103.855817)).flat(true));
-//                        googleMap.addMarker( new MarkerOptions().position(new LatLng(1.2876834, 103.8605974)).flat(true));
-//                        break;
-//                    case 1:
-//                        break;
-//                    case 2:
-//                        break;
-//                    case 3:
-//                        break;
-//                }
-//            }
+//        Context context = getApplicationContext();
+//        //TODO:could move it to splash maybe
+//        NuanceTTS.SetUpNuanceTTS(context);
 //
+//        // Create a single Vocalizer here.
+//        _vocalizer = NuanceTTS.getSpeechKit().createVocalizerWithLanguage("en_US", this, new Handler());
+//        _vocalizer.setVoice("Ava");
+
+//        ImageButton play = (ImageButton) findViewById(R.id.result_play);
+//        play.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
+//            public void onClick(View v) {
+//                _ttsContext = new Object();
+//                _vocalizer.speakString(entries.get(0).summary, _ttsContext);
 //            }
 //        });
+    }
+
+    public void removeAtomPayOnClickHandler(View v) {
+        AtomPayment itemToRemove = (AtomPayment)v.getTag();
+        listAdapter.remove(itemToRemove);
     }
 
     private void showFab() {

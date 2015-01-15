@@ -95,7 +95,7 @@ public class AdapterTransitionFragment extends Fragment implements Transition.Tr
         data = getData(getArguments().getInt(ARG_POSITION));
     }
 
-    private ListItem[] getData(int position) {
+    protected ListItem[] getData(int position) {
         switch (position)
         {
             case 0: return Home.Attractions;

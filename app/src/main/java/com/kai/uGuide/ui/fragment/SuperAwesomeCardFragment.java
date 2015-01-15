@@ -33,18 +33,21 @@ import com.kai.uGuide.R;
 public class SuperAwesomeCardFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
+    private static final String ARG_PAGE = "page";
 
     private int position;
+    private int page;
 
     private AdapterTransitionFragment adapter;
 
     public SuperAwesomeCardFragment() {
     }
 
-    public static SuperAwesomeCardFragment newInstance(int position) {
+    public static SuperAwesomeCardFragment newInstance(int position, int page) {
         SuperAwesomeCardFragment f = new SuperAwesomeCardFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
+        b.putInt(ARG_PAGE, page);
         f.setArguments(b);
         return f;
     }
@@ -54,6 +57,7 @@ public class SuperAwesomeCardFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         position = getArguments().getInt(ARG_POSITION);
+        page = getArguments().getInt(ARG_PAGE);
     }
 
     @Override
@@ -81,7 +85,10 @@ public class SuperAwesomeCardFragment extends Fragment {
         pagerlayout.setOrientation(LinearLayout.HORIZONTAL);
         pagerlayout.setId(300 + position);
 
-        adapter = AdapterTransitionFragment.newInstance(position);
+        if (page == 0)
+            adapter = AdapterTransitionFragment.newInstance(position);
+        else
+            adapter = ResultAdapterTransitionFragment.newInstance(position);
 
         getFragmentManager().beginTransaction()
                 .add(pagerlayout.getId(), adapter, "someTag" + position)

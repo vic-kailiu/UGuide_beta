@@ -53,6 +53,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.kai.uGuide.ui.adapter.Home;
 import com.kai.uGuide.ui.adapter.HomePagerAdapter;
 import com.kai.uGuide.ui.fragment.CurrentWeatherFragment;
 import com.kai.uGuide.ui.fragment.ScrollMapFragment;
@@ -336,46 +337,46 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         set1 = new AnimatorSet();
         set2 = new AnimatorSet();
         set1.addListener(
-                new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        set2.start();
-                    }
-
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-
-                    }
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
+            new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    set2.start();
                 }
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            }
         );
         set2.addListener(
-                new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        set1.start();
-                    }
-
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-
-                    }
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
+            new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    set1.start();
                 }
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            }
         );
     }
 
@@ -568,10 +569,10 @@ public class MainActivity extends ActionBarActivity implements ObservableScrollV
         text_overlay = findViewById(R.id.text_overlay);
         text_overlay_params = (RelativeLayout.LayoutParams) text_overlay.getLayoutParams();
 
-        adapter = new HomePagerAdapter(getSupportFragmentManager());
+        adapter = new HomePagerAdapter(getSupportFragmentManager(), Home.TITLES);
         pager.setAdapter(null);
         pager.setAdapter(adapter);
-//        adapter.notifyDataSetChanged();
+//      adapter.notifyDataSetChanged();
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
         pager.setPageMargin(pageMargin);
