@@ -44,4 +44,14 @@ public class Result {
             new ListItem(R.drawable.t_mona_lisa,     R.drawable.mona_lisa,      "'Earlier Mona Lisa'"),
             new ListItem(R.drawable.t_peter_pan,     R.drawable.peter_pan,      "Peter Pan, the Never Ending Story")
     };
+
+    public static final String[] TMerlion = {
+            "hello",
+            "world"
+    };
+
+    public static final String[] TMarinaBaySands = {
+            "hello",
+            "world"
+    };
 }

@@ -53,20 +53,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/flexible_space_image_height"
                 android:background="@android:color/transparent" />
-
-            <ListView android:id="@+id/list_view" android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/resultFrame"
+                android:layout_width="fill_parent"
+                android:layout_height="110dp"
+                android:background="@color/white"
+                android:padding="40dp">
+                <ListView
+                    android:background="@color/white"
+                    android:id="@+id/list_view"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent" />
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/result_mapView"
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/sectionViewMidHeight">
 
-                <fragment
-                    android:id="@+id/result_map"
-                    android:name="com.google.android.gms.maps.MapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="260dp"/>
+                <FrameLayout
+                    android:id="@+id/resultMapFragment"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"/>
 
             </RelativeLayout>
 

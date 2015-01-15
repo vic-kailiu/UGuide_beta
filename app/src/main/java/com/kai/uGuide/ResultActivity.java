@@ -9,14 +9,17 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
@@ -44,6 +47,7 @@ import com.google.maps.android.PolyUtil;
 import com.kai.uGuide.ui.adapter.AtomPayListAdapter;
 import com.kai.uGuide.ui.adapter.HomePagerAdapter;
 import com.kai.uGuide.ui.adapter.Result;
+import com.kai.uGuide.ui.fragment.ScrollMapFragment;
 import com.kai.uGuide.utils.KeyResolver;
 import com.kai.uGuide.utils.NuanceTTS;
 import com.kai.uGuide.utils.XmlParser;
@@ -102,7 +106,7 @@ public class ResultActivity extends FragmentActivity implements ObservableScroll
     private int mToolbarColor;
     private boolean mFabIsShown;
     // Google Map
-    private MapFragment mapFragment;
+    private ScrollMapFragment mapFragment;
     private View mapView;
     private GoogleMap googleMap;
     private Marker marker;
@@ -230,8 +234,8 @@ public class ResultActivity extends FragmentActivity implements ObservableScroll
         if (factor > 1)
             return;
 
-//        params.height = (int) getResources().getDimension(R.dimen.sectionViewMinHeight) + (int) (range * (1 - factor));// * factor));
-//        view.setLayoutParams(params);
+        params.height = (int) getResources().getDimension(R.dimen.sectionViewMinHeight) + (int) (range * (1 - factor));// * factor));
+        view.setLayoutParams(params);
 
 //        text_overlay_params.height = (int) (factor * 100.0);
 //        text_overlay.setLayoutParams(text_overlay_params);
@@ -271,77 +275,137 @@ public class ResultActivity extends FragmentActivity implements ObservableScroll
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                     mScrollView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 } else {
-                    mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
 
-                onScrollChanged(0, false, false);
-            }
-        });
-    }
+    mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+}
 
-    private void initializeFloatingActionButton() {
+    onScrollChanged(0, false, false);
+}
+});
+        }
+
+private void initializeFloatingActionButton() {
         mFab = (FloatingActionButton) findViewById(R.id.result_fab);
-        mFab.setIcon(R.drawable.ic_home);
+        mFab.setIcon(R.drawable.ic_street);
 
         mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(ResultActivity.this, StreetViewActivity.class);
-                startActivity(it);
-                //finish();
-            }
+@Override
+public void onClick(View v) {
+        Intent it = new Intent(ResultActivity.this, StreetViewActivity.class);
+        startActivity(it);
+        //finish();
+        }
         });
 
         mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
 //        ViewHelper.setScaleX(mFab, 0);
 //        ViewHelper.setScaleY(mFab, 0);
-    }
-
-    private void initializeMap() {
-        if (googleMap == null) {
-            mapFragment = ((MapFragment) getFragmentManager().findFragmentById(R.id.result_map));
-            googleMap = mapFragment.getMap();
-            mapView = (RelativeLayout) findViewById(R.id.result_mapView);
-            //mapParams = (LinearLayout.LayoutParams) mapView.getLayoutParams();
-
-            // check if map is created successfully or not
-            if (googleMap == null) {
-                Toast.makeText(getApplicationContext(),
-                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
-                        .show();
-            }
-
-            googleMap.setMyLocationEnabled(true); // false to disable
-            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-            LatLng pos = new LatLng(entries.get(0).lati, entries.get(0).longti);
-            marker = googleMap.addMarker(
-                    new MarkerOptions().position(pos).flat(true));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, MAP_ZOOM));
-
-            googleMap.clear();
-            for (int i = 0; i< entries.get(0).path.size(); i++) {
-                List<LatLng> decodedPath = PolyUtil.decode(entries.get(0).path.get(i));
-                googleMap.addPolyline(new PolylineOptions().addAll(decodedPath).width(5).color(R.color.primary).zIndex(100));
-            }
-            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.286274, 103.859266)).flat(true) );
-            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.283649, 103.860346)).flat(true) );
-            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.286848, 103.854532)).flat(true) );
-            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.289299, 103.863137)).flat(true) );
-            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.289793, 103.855817)).flat(true) );
-            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.2876834, 103.8605974)).flat(true) );
         }
+    private void initializeMap() {
+//        if (googleMap == null) {
+//            mapFragment = ((MapFragment) getFragmentManager().findFragmentById(R.id.result_map));
+//            googleMap = mapFragment.getMap();
+//            mapView = (RelativeLayout) findViewById(R.id.result_mapView);
+//            //mapParams = (LinearLayout.LayoutParams) mapView.getLayoutParams();
+//
+//            // check if map is created successfully or not
+//            if (googleMap == null) {
+//                Toast.makeText(getApplicationContext(),
+//                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
+//                        .show();
+//            }
+//
+//            googleMap.setMyLocationEnabled(true); // false to disable
+//            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+//
+//            LatLng pos = new LatLng(entries.get(0).lati, entries.get(0).longti);
+//            marker = googleMap.addMarker(
+//                    new MarkerOptions().position(pos).flat(true));
+//            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, MAP_ZOOM));
+//
+//            googleMap.clear();
+//            for (int i = 0; i< entries.get(0).path.size(); i++) {
+//                List<LatLng> decodedPath = PolyUtil.decode(entries.get(0).path.get(i));
+//                googleMap.addPolyline(new PolylineOptions().addAll(decodedPath).width(5).color(R.color.primary).zIndex(100));
+//            }
+//            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.286274, 103.859266)).flat(true) );
+//            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.283649, 103.860346)).flat(true) );
+//            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.286848, 103.854532)).flat(true) );
+//            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.289299, 103.863137)).flat(true) );
+//            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.289793, 103.855817)).flat(true) );
+//            googleMap.addMarker( new MarkerOptions().position(new LatLng(1.2876834, 103.8605974)).flat(true) );
+//        }
+        mapFragment = ScrollMapFragment.newInstance();
+        mapFragment.setListener(
+                new ScrollMapFragment.OnMapReadyListener() {
+                    @Override
+                    public void onMapReady() {
+                        googleMap = mapFragment.getMap();
+
+                        // check if map is created successfully or not
+                        if (googleMap == null) {
+                            Toast.makeText(getApplicationContext(),
+                                    "Sorry! unable to create maps", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+
+                        googleMap.setMyLocationEnabled(true); // false to disable
+                        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+                        LatLng pos = new LatLng(entries.get(0).lati, entries.get(0).longti);
+                        marker = googleMap.addMarker(
+                                new MarkerOptions().position(pos).flat(true));
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, MAP_ZOOM));
+
+                        googleMap.clear();
+                        for (int i = 0; i< entries.get(0).path.size(); i++) {
+                            List<LatLng> decodedPath = PolyUtil.decode(entries.get(0).path.get(i));
+                            googleMap.addPolyline(new PolylineOptions().addAll(decodedPath).width(5).color(R.color.primary).zIndex(100));
+                        }
+                        googleMap.addMarker( new MarkerOptions().position(new LatLng(1.286274, 103.859266)).flat(true) );
+                        googleMap.addMarker( new MarkerOptions().position(new LatLng(1.283649, 103.860346)).flat(true) );
+                        googleMap.addMarker( new MarkerOptions().position(new LatLng(1.286848, 103.854532)).flat(true) );
+                        googleMap.addMarker( new MarkerOptions().position(new LatLng(1.289299, 103.863137)).flat(true) );
+                        googleMap.addMarker( new MarkerOptions().position(new LatLng(1.289793, 103.855817)).flat(true) );
+                        googleMap.addMarker( new MarkerOptions().position(new LatLng(1.2876834, 103.8605974)).flat(true) );
+                    }
+                }
+        );
+
+        mapFragment.setListener(
+                new ScrollMapFragment.OnTouchListener() {
+                    @Override
+                    public void onTouch() {
+                        if (mScrollView != null)
+                            mScrollView.requestDisallowInterceptTouchEvent(true);
+                    }
+                }
+        );
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.resultMapFragment, mapFragment);
+        ft.commit();
     }
 
     private void initializeViews() {
-//        introView = (LinearLayout) findViewById(R.id.resultFrame);
-//        introParams = (LinearLayout.LayoutParams) introView.getLayoutParams();
+        introView = (LinearLayout) findViewById(R.id.resultFrame);
+        introParams = (LinearLayout.LayoutParams) introView.getLayoutParams();
         ListView listView = (ListView) findViewById(R.id.list_view);
         listAdapter = new AtomPayListAdapter(ResultActivity.this, R.layout.item_speech_list, new ArrayList<AtomPayment>());
-        listAdapter.insert(new AtomPayment("", 0), 0);
-        listAdapter.insert(new AtomPayment("", 0), 0);
-        listAdapter.insert(new AtomPayment("", 0), 0);
+        listAdapter.insert(new AtomPayment("oppps", R.drawable.earth), 0);
+        listAdapter.insert(new AtomPayment("smelly", R.drawable.earth), 0);
+        listAdapter.insert(new AtomPayment("cat", R.drawable.earth), 0);
         listView.setAdapter(listAdapter);
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                if (mScrollView != null)
+                    mScrollView.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
 
         adapter = new HomePagerAdapter(getSupportFragmentManager(), Result.TITLES);
         pager.setAdapter(null);

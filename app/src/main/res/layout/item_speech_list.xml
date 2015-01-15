@@ -1,33 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="horizontal" >
-
-    <EditText
-        android:id="@+id/atomPay_name"
-        android:layout_width="0sp"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="horizontal"
+              android:paddingTop="10dp"
+              android:paddingBottom="10dp">
+    <ImageView
+        android:layout_width="30dp"
         android:layout_height="fill_parent"
-        android:layout_weight="2"
-        android:gravity="center_vertical"
-        android:hint="foo"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:id="@+id/logo"
+        tools:src="@drawable/earth" />
 
-    <EditText
-        android:id="@+id/atomPay_value"
-        android:layout_width="0sp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:inputType="numberDecimal"
-        android:text="smelly"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/title"
+        android:textColor="@color/black"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp" />
 
     <ImageButton
-        android:id="@+id/atomPay_removePay"
-        android:layout_width="100dp"
-        android:layout_height="fill_parent"
-        android:contentDescription="@string/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/result_play"
+        android:src="@drawable/ic_action_play"
+        android:background="@null"
+        android:layout_gravity="center_vertical"
         android:onClick="removeAtomPayOnClickHandler"
-        android:src="@android:drawable/ic_menu_delete" />
+        android:layout_marginLeft="20dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/result_like"
+        android:src="@drawable/ic_like"
+        android:background="@null"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp" />
 </LinearLayout>

@@ -52,7 +52,7 @@
         <!-- Goolge Maps API Key -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAkx-fbnOKavvI-IDGmAw2Z3aBgaDbYxbY" />
+            android:value="AIzaSyDtsLTA0lBtKBYrPWnfbOcrMK4TpoGPAMI" />
 
         <!-- MBA AIzaSyAkx-fbnOKavvI-IDGmAw2Z3aBgaDbYxbY -->
         <!-- WSN AIzaSyDtsLTA0lBtKBYrPWnfbOcrMK4TpoGPAMI -->

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kai.uGuide.AtomPayment;
@@ -42,13 +43,11 @@ public class AtomPayListAdapter extends ArrayAdapter<AtomPayment> {
 
 		holder = new AtomPaymentHolder();
 		holder.atomPayment = items.get(position);
-		holder.removePaymentButton = (ImageButton)row.findViewById(R.id.atomPay_removePay);
+		holder.removePaymentButton = (ImageButton)row.findViewById(R.id.result_play);
 		holder.removePaymentButton.setTag(holder.atomPayment);
 
-		holder.name = (TextView)row.findViewById(R.id.atomPay_name);
-		setNameTextChangeListener(holder);
-		holder.value = (TextView)row.findViewById(R.id.atomPay_value);
-		setValueTextListeners(holder);
+		holder.name = (TextView)row.findViewById(R.id.title);
+		holder.value = (ImageView)row.findViewById(R.id.logo);
 
 		row.setTag(holder);
 
@@ -58,49 +57,13 @@ public class AtomPayListAdapter extends ArrayAdapter<AtomPayment> {
 
 	private void setupItem(AtomPaymentHolder holder) {
 		holder.name.setText(holder.atomPayment.getName());
-		holder.value.setText(String.valueOf(holder.atomPayment.getValue()));
+		holder.value.setImageResource((int)(holder.atomPayment.getValue()));
 	}
 
 	public static class AtomPaymentHolder {
 		AtomPayment atomPayment;
 		TextView name;
-		TextView value;
+        ImageView value;
 		ImageButton removePaymentButton;
-	}
-	
-	private void setNameTextChangeListener(final AtomPaymentHolder holder) {
-		holder.name.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				holder.atomPayment.setName(s.toString());
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-			@Override
-			public void afterTextChanged(Editable s) { }
-		});
-	}
-
-	private void setValueTextListeners(final AtomPaymentHolder holder) {
-		holder.value.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				try{
-					holder.atomPayment.setValue(Double.parseDouble(s.toString()));
-				}catch (NumberFormatException e) {
-					Log.e(LOG_TAG, "error reading double value: " + s.toString());
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-			@Override
-			public void afterTextChanged(Editable s) { }
-		});
 	}
 }
