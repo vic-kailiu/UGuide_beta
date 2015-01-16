@@ -19,7 +19,8 @@
         android:gravity="center"
         android:padding="10dp"
         android:id="@+id/buttonMer"
-        android:textColor="@color/white_pressed" />
+        android:textColor="@color/white_pressed"
+        android:visibility="gone"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -31,7 +32,8 @@
         android:gravity="center"
         android:padding="10dp"
         android:id="@+id/buttonEsp"
-        android:textColor="@color/white_pressed" />
+        android:textColor="@color/white_pressed"
+        android:visibility="gone"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -43,7 +45,8 @@
         android:gravity="center"
         android:padding="10dp"
         android:id="@+id/buttonFly"
-        android:textColor="@color/white_pressed" />
+        android:textColor="@color/white_pressed"
+        android:visibility="gone"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -55,7 +58,8 @@
         android:gravity="center"
         android:padding="10dp"
         android:id="@+id/buttonArt"
-        android:textColor="@color/white_pressed" />
+        android:textColor="@color/white_pressed"
+        android:visibility="gone"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -67,5 +71,6 @@
         android:gravity="center"
         android:padding="10dp"
         android:id="@+id/buttonMBS"
-        android:textColor="@color/white_pressed" />
+        android:textColor="@color/white_pressed"
+        android:visibility="gone"/>
 </RelativeLayout>

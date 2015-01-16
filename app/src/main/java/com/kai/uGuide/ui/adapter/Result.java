@@ -3,11 +3,11 @@ package com.kai.uGuide.ui.adapter;
 import com.kai.uGuide.R;
 
 public class Result {
-    public static final String[] TITLES = {"Attractions1", "Tours1", "Food1", "Hotels1", "Events1"};
+    public static final String[] TITLES = {"Attractions", "Tours", "Food", "Hotels", "Events"};
 
     public static final ListItem[] Attractions = {
-            new ListItem(R.drawable.t_sentosa,              R.drawable.sentosa,              "111Sentosa Island"),
-            new ListItem(R.drawable.t_universal_studios,    R.drawable.universal_studio,     "111Universal Studios Singapore"),
+            new ListItem(R.drawable.t_sentosa,              R.drawable.sentosa,              "Sentosa Island"),
+            new ListItem(R.drawable.t_universal_studios,    R.drawable.universal_studio,     "Universal Studios Singapore"),
             new ListItem(R.drawable.t_merlion,              R.drawable.merlion,              "Merlion Park"),
             new ListItem(R.drawable.t_orchard,              R.drawable.orchard,              "Orchard Road"),
             new ListItem(R.drawable.t_marina_bay_sands,     R.drawable.marina_bay,           "Marina Bay"),

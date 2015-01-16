@@ -26,7 +26,7 @@ public class StreetViewActivity extends FragmentActivity
         StreetViewPanorama.OnStreetViewPanoramaClickListener {
 
     private static final LatLng MERLION = new LatLng(1.2865534, 103.8544511);
-    private static final LatLng ART = new LatLng(1.286456,103.859885);
+    private static final LatLng ART = new LatLng(1.286456, 103.859885);
 
     private int screenWidth;
     private int screenHeight;
@@ -35,10 +35,10 @@ public class StreetViewActivity extends FragmentActivity
 
     // within 180;
     private double[] merHAngle = {13, 20, 72, 93, 114};
-    private double[] merVAngle = {16, 10, 5,  2,  13};
+    private double[] merVAngle = {16, 10, 5, 2, 13};
 
-    private double[] mbsHAngle = {-360, -60, 50, 153, -110 };
-    private double[] mbsVAngle = {-360, 7, 5,  28,  31   };
+    private double[] mbsHAngle = {-360, -40, 50, -110, 153};
+    private double[] mbsVAngle = {-360, 0, 15, 31, 35};
 
     private double[] currentH = merHAngle;
     private double[] currentV = merVAngle;
@@ -68,6 +68,9 @@ public class StreetViewActivity extends FragmentActivity
                         currentH = merHAngle;
                         currentV = merVAngle;
                         svp.setPosition(MERLION);
+                        new StreetViewPanoramaCamera.Builder(svp.getPanoramaCamera())
+                                .tilt(16).bearing(13).build();
+                        clearLabel();
                     }
                 }
         );
@@ -75,7 +78,12 @@ public class StreetViewActivity extends FragmentActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        currentH = merHAngle;
+                        currentV = merVAngle;
                         svp.setPosition(MERLION);
+                        new StreetViewPanoramaCamera.Builder(svp.getPanoramaCamera())
+                                .tilt(16).bearing(13).build();
+                        clearLabel();
                     }
                 }
         );
@@ -83,7 +91,12 @@ public class StreetViewActivity extends FragmentActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        currentH = merHAngle;
+                        currentV = merVAngle;
                         svp.setPosition(MERLION);
+                        new StreetViewPanoramaCamera.Builder(svp.getPanoramaCamera())
+                                .tilt(16).bearing(13).build();
+                        clearLabel();
                     }
                 }
         );
@@ -94,6 +107,9 @@ public class StreetViewActivity extends FragmentActivity
                         currentH = mbsHAngle;
                         currentV = mbsVAngle;
                         svp.setPosition(ART);
+                        new StreetViewPanoramaCamera.Builder()
+                                .tilt(31).bearing(-110).build();
+                        clearLabel();
                     }
                 }
         );
@@ -101,7 +117,12 @@ public class StreetViewActivity extends FragmentActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        currentH = merHAngle;
+                        currentV = merVAngle;
                         svp.setPosition(MERLION);
+                        new StreetViewPanoramaCamera.Builder()
+                                .tilt(16).bearing(13).build();
+                        clearLabel();
                     }
                 }
         );
@@ -116,9 +137,11 @@ public class StreetViewActivity extends FragmentActivity
                         svp.setOnStreetViewPanoramaCameraChangeListener(StreetViewActivity.this);
                         svp.setUserNavigationEnabled(false);
 
-
                         if (savedInstanceState == null) {
                             svp.setPosition(MERLION);
+                            new StreetViewPanoramaCamera.Builder(svp.getPanoramaCamera())
+                                    .tilt(16).bearing(13).build();
+                            clearLabel();
                         }
                     }
                 });
@@ -140,9 +163,21 @@ public class StreetViewActivity extends FragmentActivity
             int centerY = (int) (screenHeight / 2.0 * (1 + factorV));
 
             if (centerX > 0 && centerX < screenWidth) {
-                ViewHelper.setTranslationX(labels[i], centerX);
-                ViewHelper.setTranslationY(labels[i], centerY);
+                if (centerX < screenWidth / 4 || centerX > screenWidth / 4 * 3
+                        || centerY < screenHeight / 4 || centerY > screenHeight / 4 * 3) {
+                    labels[i].setVisibility(View.GONE);
+                } else {
+                    labels[i].setVisibility(View.VISIBLE);
+                    ViewHelper.setTranslationX(labels[i], centerX);
+                    ViewHelper.setTranslationY(labels[i], centerY);
+                }
             }
+        }
+    }
+
+    private void clearLabel() {
+        for (int i = 0; i < 5; i++) {
+            labels[i].setVisibility(View.GONE);
         }
     }
 
